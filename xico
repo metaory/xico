@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#init
+
+# https://imagemagick.org/Usage/text/
+
+font='Monaspace Argon'
+weight=Bold
+size=50
+
+convert \
+  -font "$font" \
+  -weight "$weigth" \
+  -gravity South \
+  -pointsize "$size" \
+  -size 32x32 xc:white \
+  -annotate +0+0 'X' \
+  out.png
+
