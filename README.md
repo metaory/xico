@@ -11,15 +11,18 @@ SYNOPSIS
 
 
 DESCRIPTION
-	make a single image from a character, or from a toml config file
+	make a single image from a character, or from a toml config
 
 
 EXAMPLES
     # make a single image from a character
 	xico -c ▲ trngl.png
 
-    # make images from a xico config file
+    # make images from a xico config
 	xico -t awm_layouts.toml
+
+CONFIGURATION
+	# XXX: toml config
 
 
 ENVIRONMENT VARIABLES
@@ -35,7 +38,6 @@ AUTHOR
 	metaory <metaory@gmail.com>, Apr 2024
 ```
 
-CONFIGURATION
 -------------
 
 
