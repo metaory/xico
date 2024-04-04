@@ -1,19 +1,61 @@
 #!/bin/bash
 
-#init
+XICO_BASE="${XICO_BASE}${XICO_BASE:+/}"
 
-# https://imagemagick.org/Usage/text/
+set -o noclobber
+set -o errexit
+set -o pipefail
 
-font='Monaspace Argon'
-weight=Bold
-size=50
+set -o errtrace
+set -E -o functrace
 
-convert \
-  -font "$font" \
-  -weight "$weigth" \
-  -gravity South \
-  -pointsize "$size" \
-  -size 32x32 xc:white \
-  -annotate +0+0 'X' \
-  out.png
+# tpl="xico.tpl.svg"
+# tmp="/tmp/xico_${RANDOM}.svg"
+
+function die {
+  printf '\e[31m%s\e[33m %s\e[0m ' "$*" \
+    'xico [-t path] | [-c char path]'; exit 1
+}
+
+function from_chr {
+  local c="${1:?$(die BAD_CHAR)}"
+  local o="${2:?$(die BAD_OXXPUT)}"
+  local s=500
+
+  echo "c :: $c"
+  echo "o :: $o"
+
+  # sed -e "s/__XICO__/${char}/" "$tpl" > "$tmp"
+  #
+  # inkscape \
+  #   -w "$size" \
+  #   -h "$size" \
+  #   "$tmp" \
+  #   -o "$out"
+
+  echo ok
+}
+
+function from_tpl {
+  local t="${1:?die BAD_TPL}"
+
+  [ -e "$t" ] || die TPL_NOT_FOUND
+
+  echo "t :: $t"
+
+  # while read -r L; do
+  #
+  #   CHAR="${L%% *}"
+  #   DEST="${XICO_BASE}${XICO_BASE:+/}${L##* }"
+  #   echo "${CHAR} : ${DEST}"
+  #   xico "$CHAR" "$DEST"
+  # done <"$XICO_FILE"
+}
+
+
+case $1 in
+  -t|--template) from_tpl "${@:2}" ;;
+  -c|--char    ) from_chr "${@:2}" ;;
+  *) die BAD_ARG
+esac
 
