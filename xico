@@ -1,7 +1,5 @@
 #!/bin/bash
 
-XICO_BASE="${XICO_BASE}${XICO_BASE:+/}"
-
 set -o noclobber
 set -o errexit
 set -o pipefail
@@ -9,37 +7,36 @@ set -o pipefail
 set -o errtrace
 set -E -o functrace
 
-# tpl="xico.tpl.svg"
-# tmp="/tmp/xico_${RANDOM}.svg"
+declare XICO_BASE="${XICO_BASE}${XICO_BASE:+/}"
+declare BASE; BASE=$(dirname "$(realpath "$0")")
+declare XTPL="${BASE}/xico.tpl.svg"
 
-function die {
-  printf '\e[31m%s\e[33m %s\e[0m ' "$*" \
-    'xico [-t path] | [-c char path]'; exit 1
-}
+function showerr { printf '\e[31m%s\e[0m\n' "$*"; }
+function showhlp { printf '\e[32m xico [-t path] | [-c char path]\n\n'; }
+function makedie { showerr "$*"; exit 1; }
 
-function from_chr {
-  local c="${1:?$(die BAD_CHAR)}"
-  local o="${2:?$(die BAD_OXXPUT)}"
+[ -e "$XTPL" ] || makedie "MISSING_TPL: ${XTPL}"
+
+function fromchr {
+  local c="${1:?$(showerr NO_CHAR)}"
+  local o="${2:?$(showerr NO_PATH)}"
+  local t="/tmp/xico_${RANDOM}.svg"
   local s=500
 
   echo "c :: $c"
   echo "o :: $o"
+  echo "t :: $t"
+  echo "s :: $s"
 
-  # sed -e "s/__XICO__/${char}/" "$tpl" > "$tmp"
-  #
-  # inkscape \
-  #   -w "$size" \
-  #   -h "$size" \
-  #   "$tmp" \
-  #   -o "$out"
+  sed -e "s/__XICO__/${c}/" "$XTPL" > "$t"
 
-  echo ok
+  inkscape -w "$s" -h "$s" "$t" -o "$o"
 }
 
-function from_tpl {
-  local t="${1:?die BAD_TPL}"
+function fromtpl {
+  local t="${1:?$(makedie BAD_TPL)}"
 
-  [ -e "$t" ] || die TPL_NOT_FOUND
+  [ -e "$t" ] || makedie TPL_NOT_FOUND
 
   echo "t :: $t"
 
@@ -54,8 +51,9 @@ function from_tpl {
 
 
 case $1 in
-  -t|--template) from_tpl "${@:2}" ;;
-  -c|--char    ) from_chr "${@:2}" ;;
-  *) die BAD_ARG
+  -t|--template) fromtpl "${@:2}" ;;
+  -c|--char    ) fromchr "${@:2}" ;;
+  -h|--help    ) showhlp "${@:2}" ;;
+  *            ) makedie BAD_ARG
 esac
 
