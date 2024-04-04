@@ -3,7 +3,7 @@ XICO
 
 ```ex
 NAME
-	xico - generate svg or png from unicode font glyphs
+	xico - make images from a character or a toml template
 
 
 SYNOPSIS
@@ -11,7 +11,7 @@ SYNOPSIS
 
 
 DESCRIPTION
-	make a single image from a character, or from a toml config
+	xico is a simple way to make images from any unicode glyphs
 
 
 EXAMPLES
