@@ -1,0 +1,30 @@
+# xico sample
+# ~/.config/xico/config.toml
+
+  # font = 'monospace'
+
+
+# foo   =   "sdd"
+
+[awesome.layout]
+base  = '/tmp/foo'
+icons =   [
+ ['x', 'nada.png'],
+    ['y', 'nada.png'],
+  ['▣', 'floating.png'],
+   ['◨', 'tile.png'],
+]
+
+
+[awesome.tags]
+ # base = 'awesome/themes/meta/icons/tags'
+# base  = '/tmp/foo'
+ icons  = [
+  [ 'a', 'a_tag_1.png'],
+    ['b', 'a_tag_2.png'],
+  ['c', 'a_tag_3.png'],
+   ['d', 'a_tag_4.png'],
+]
+
+
+

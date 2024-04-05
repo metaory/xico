@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2181
 
 set -o noclobber
 set -o errexit
@@ -7,19 +8,50 @@ set -o pipefail
 set -o errtrace
 set -E -o functrace
 
-declare XICO_BASE="${XICO_BASE}${XICO_BASE:+/}"
+a="$(date '+%s%3N')"
+
+sleep 1.32
+
+b="$(date '+%s%3N')"
+
+x="$(( b - a ))"
+y="$(( x / 1000 ))"
+
+cat << EOM
+  a         $a
+- b         $b
+  ===================
+/ 1000      $x
+  -------------------
+            $y
+EOM
+# printf '%-3d\n' "$x"
+printf "%-6.2f" "$x"
+printf "%-6.2f" "$x"
+
+awk 'BEGIN {printf "%-6.2f", '$x'}'
+
+exit
+
+
+declare TIME; TIME="$(date '+%N')"
 declare BASE; BASE=$(dirname "$(realpath "$0")")
-declare XTPL="${BASE}/xico.tpl.svg"
+declare SYNOPSIS='xico [-t path] | [-c char path]'
+declare -A CFG=( [svg]="${BASE}/xico.tpl.svg" [geo]=500 [mod]=showhlp )
 
+function showhlp { printf '\n\e[32m%s\n\n' "$SYNOPSIS"; }
 function showerr { printf '\e[31m%s\e[0m\n' "$*"; }
-function showhlp { printf '\e[32m xico [-t path] | [-c char path]\n\n'; }
 function makedie { showerr "$*"; exit 1; }
+function cleanup {
+  (( $? )) && showhlp
+  printf 'took %sms\n' "$(( $(date '+%N') - TIME ))"
+}
 
-[ -e "$XTPL" ] || makedie "MISSING_TPL: ${XTPL}"
+trap cleanup EXIT
 
 function fromchr {
-  local c="${1:?$(showerr NO_CHAR)}"
-  local o="${2:?$(showerr NO_PATH)}"
+  local c="${CFG[chr]:?$(showerr NO_CHAR)}"
+  local o="${CFG[out]:?$(showerr NO_PATH)}"
   local t="/tmp/xico_${RANDOM}.svg"
   local s=500
 
@@ -28,32 +60,62 @@ function fromchr {
   echo "t :: $t"
   echo "s :: $s"
 
-  sed -e "s/__XICO__/${c}/" "$XTPL" > "$t"
+  sleep 3.2
+  exit 23
+  return
+  sed -e "s/__XICO__/${c}/" "${CFG[svg]}" > "$t"
 
-  inkscape -w "$s" -h "$s" "$t" -o "$o"
+  inkscape -w "$s" -h "$s" "$t" -o "$o" --export-type 'png'
 }
 
 function fromtpl {
-  local t="${1:?$(makedie BAD_TPL)}"
+  # local t="${1:?$(makedie BAD_TPL)}"
+  local b=
 
   [ -e "$t" ] || makedie TPL_NOT_FOUND
 
-  echo "t :: $t"
+  echo "t :: $t"; echo $'\t-------'
 
-  # while read -r L; do
-  #
-  #   CHAR="${L%% *}"
-  #   DEST="${XICO_BASE}${XICO_BASE:+/}${L##* }"
-  #   echo "${CHAR} : ${DEST}"
-  #   xico "$CHAR" "$DEST"
-  # done <"$XICO_FILE"
+  while read -r L; do
+    k="${L%% *}"
+    v="${L##* }"
+    [ "$k" == 'base' ] && b="${v}" && continue
+    fromchr "$k" "${b}/${v}"
+  done < <(sed -E \
+    -e '/^\[|.*icons.*=/d' \
+    -e 's/[\x5b]|[\x5d]//g' \
+    -e "s/['\",=]//g" \
+    -e 's/([ ]{2,})/ /g' \
+    -e 's/^(\s+)//g' \
+    -e '/^$|[#]/d' < "$t")
+
+  echo ok
 }
 
+[ -e "${CFG[svg]}" ] || makedie "MISSING_TPL: ${CFG[svg]}"
 
-case $1 in
-  -t|--template) fromtpl "${@:2}" ;;
-  -c|--char    ) fromchr "${@:2}" ;;
-  -h|--help    ) showhlp "${@:2}" ;;
-  *            ) makedie BAD_ARG
-esac
+while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+  -t|--template) CFG[mod]=fromtpl; shift; CFG[tpl]="$1" ;;
+  -s|--size) CFG[geo]="$2"; shift ;;
+  -c|--char) CFG[mod]=fromchr; shift; CFG[chr]="$1" ;;
+  -h|--help) showhlp ;;
+  *) showhlp; makedie BAD_ARG ;;
+esac; shift; done
 
+# echo "REST ${@}"
+
+CFG[out]="${*}"
+
+declare -p CFG
+
+${CFG[mod]}
+
+# case $1 in
+#   -t|--template) fromtpl "${@:2}" ;;
+#   -c|--char    ) fromchr "${@:2}" ;;
+#   -h|--help    ) showhlp "${@:2}" ;;
+#   *            ) makedie BAD_ARG
+  # esac
+
+  # local c="${1:?$(showerr NO_CHAR)}"
+  # local o="${2:?$(showerr NO_PATH)}"
