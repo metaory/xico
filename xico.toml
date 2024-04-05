@@ -1,0 +1,22 @@
+# xico config
+# ~/.config/xico/xico.toml
+
+[awesome.layout]
+base = '~/.config/awesome/themes/meta/icons/layout'
+icons = [
+  ['▣', 'dummy_floating.png'],
+  ['◨', 'dummy_tile.png'],
+  ['', 'dummy_tile.png'],
+]
+
+[awesome.tags]
+icons = [
+  ['▣', '~/.config/awesome/themes/meta/tags/demo_tag.png'],
+  ['▣', '~/.config/awesome/icon/demo.png'],
+]
+
+[somekey]
+icons = [
+  ['⊖', '/tmp/demo_1.png'],
+  ['◪', '/tmp/ohhh_2.png'],
+]

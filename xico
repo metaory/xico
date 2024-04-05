@@ -4,118 +4,74 @@
 set -o noclobber
 set -o errexit
 set -o pipefail
-
 set -o errtrace
 set -E -o functrace
 
-a="$(date '+%s%3N')"
-
-sleep 1.32
-
-b="$(date '+%s%3N')"
-
-x="$(( b - a ))"
-y="$(( x / 1000 ))"
-
-cat << EOM
-  a         $a
-- b         $b
-  ===================
-/ 1000      $x
-  -------------------
-            $y
-EOM
-# printf '%-3d\n' "$x"
-printf "%-6.2f" "$x"
-printf "%-6.2f" "$x"
-
-awk 'BEGIN {printf "%-6.2f", '$x'}'
-
-exit
-
-
-declare TIME; TIME="$(date '+%N')"
+declare TIME; TIME="$(date '+%s%3N')"
 declare BASE; BASE=$(dirname "$(realpath "$0")")
-declare SYNOPSIS='xico [-t path] | [-c char path]'
-declare -A CFG=( [svg]="${BASE}/xico.tpl.svg" [geo]=500 [mod]=showhlp )
+declare XCNF="$HOME/.config/xico/config.toml"
+declare SYNOPSIS='xico [-t path] | [-u] | [-c char path]'
+declare -A CFG=( [geo]=500 [ext]=png [mod]=show.hlp [tpl]="$XCNF" )
+declare SVG="${BASE}/xico.svg"
+declare SED="${BASE}/xico.sed"
 
-function showhlp { printf '\n\e[32m%s\n\n' "$SYNOPSIS"; }
-function showerr { printf '\e[31m%s\e[0m\n' "$*"; }
-function makedie { showerr "$*"; exit 1; }
-function cleanup {
-  (( $? )) && showhlp
-  printf 'took %sms\n' "$(( $(date '+%N') - TIME ))"
-}
-
-trap cleanup EXIT
+function get.took { bc <<< "scale=2; $(( $(date '+%s%3N') - TIME ))/1000"; }
+function show.age { printf '\n\e[32mtook %ss\n' "$(get.took)"; }
+function show.hlp { printf '\n\e[34m  %s\n\n\n' "$SYNOPSIS"; }
+function show.err { printf '\n\e[31m %s\e[0m\n' "$*"; }
+function do.clean { (( $? )) && show.hlp; show.age; }
+function do.fatal { show.err "$*"; exit 1; }
 
 function fromchr {
-  local c="${CFG[chr]:?$(showerr NO_CHAR)}"
-  local o="${CFG[out]:?$(showerr NO_PATH)}"
-  local t="/tmp/xico_${RANDOM}.svg"
-  local s=500
+  local c="${1:-${CFG[chr]:?$(show.err NO_CHAR)}}"
+  local o="${2:-${CFG[out]:?$(show.err NO_PATH)}}"
 
-  echo "c :: $c"
-  echo "o :: $o"
-  echo "t :: $t"
-  echo "s :: $s"
+  local s="${CFG[geo]}"
+  local b="${o%/*}"
+  local t="/tmp/xico/${RANDOM}.svg"
 
-  sleep 3.2
-  exit 23
-  return
-  sed -e "s/__XICO__/${c}/" "${CFG[svg]}" > "$t"
+  [ "$o" != "$b" ] && ! [ -d "$b" ] && mkdir "$b" 2>/dev/null
 
-  inkscape -w "$s" -h "$s" "$t" -o "$o" --export-type 'png'
+  (( XICO_DEBUG )) && printf '%s:%s:->:%s___%s\n' "$t" "$c" "$o" "$b"
+
+  sed -e "s/__XICO__/${c}/" "$SVG" > "$t"
+
+  inkscape -w "$s" -h "$s" "$t" --export-type "${CFG[ext]}" -o "$o"
 }
 
 function fromtpl {
-  # local t="${1:?$(makedie BAD_TPL)}"
-  local b=
-
-  [ -e "$t" ] || makedie TPL_NOT_FOUND
-
-  echo "t :: $t"; echo $'\t-------'
-
+  local b
+  [ -e "${CFG[tpl]}" ] || do.fatal TPL_NOT_FOUND
   while read -r L; do
-    k="${L%% *}"
-    v="${L##* }"
-    [ "$k" == 'base' ] && b="${v}" && continue
-    fromchr "$k" "${b}/${v}"
-  done < <(sed -E \
-    -e '/^\[|.*icons.*=/d' \
-    -e 's/[\x5b]|[\x5d]//g' \
-    -e "s/['\",=]//g" \
-    -e 's/([ ]{2,})/ /g' \
-    -e 's/^(\s+)//g' \
-    -e '/^$|[#]/d' < "$t")
+    k="${L%% *}"; v="${L##* }"
 
-  echo ok
+    [ "$k" == 'base' ] && b="${v}" && continue
+
+    fromchr "$k" "${b}/${v}"
+  done < <(sed -E -f "$SED" < "${CFG[tpl]}")
 }
 
-[ -e "${CFG[svg]}" ] || makedie "MISSING_TPL: ${CFG[svg]}"
+# -------------------- #
+
+trap do.clean EXIT
+
+{ [ -e "$SVG" ] && [ -e "$SED" ]; } || do.fatal MISSING_INTERNALS
+
+  [ -d "/tmp/xico" ] || mkdir "$b" 2>/dev/null || true
+
+# -------------------- #
 
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+  -u|--user)     CFG[mod]=fromtpl; shift;;
   -t|--template) CFG[mod]=fromtpl; shift; CFG[tpl]="$1" ;;
-  -s|--size) CFG[geo]="$2"; shift ;;
-  -c|--char) CFG[mod]=fromchr; shift; CFG[chr]="$1" ;;
-  -h|--help) showhlp ;;
-  *) showhlp; makedie BAD_ARG ;;
+  -c|--char)     CFG[mod]=fromchr; shift; CFG[chr]="$1" ;;
+  -s|--size)     CFG[geo]="$2";    shift;               ;;
+  -h|--help)     show.hlp                               ;;
+  *)             show.hlp; do.fatal BAD_ARG             ;;
 esac; shift; done
-
-# echo "REST ${@}"
 
 CFG[out]="${*}"
 
-declare -p CFG
+(( XICO_DEBUG )) && declare -p CFG
 
 ${CFG[mod]}
-
-# case $1 in
-#   -t|--template) fromtpl "${@:2}" ;;
-#   -c|--char    ) fromchr "${@:2}" ;;
-#   -h|--help    ) showhlp "${@:2}" ;;
-#   *            ) makedie BAD_ARG
-  # esac
-
-  # local c="${1:?$(showerr NO_CHAR)}"
-  # local o="${2:?$(showerr NO_PATH)}"

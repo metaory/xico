@@ -7,7 +7,7 @@ NAME
 
 
 SYNOPSIS
-	xico [-t path] | [-c char path]
+	xico [-t path] | [-u] | [-c char path]
 
 
 DESCRIPTION
@@ -21,13 +21,29 @@ EXAMPLES
     # make images from a xico config
 	xico -t awm_layouts.toml
 
+    # make images from user config ~/.config/xico/config.toml
+	xico -u
+
 CONFIGURATION
-	# XXX: toml config
+    # ~/.config/xico/config.toml
+    [somekey]
+    icons = [
+      ['⊖', '/tmp/nada/xorg.png'],
+      ['◪', 'noop.png'],
+    ]
+
+    [awesome.layout]
+    base = '~/.config/awesome/themes/meta/icons/layout'
+    icons = [
+      ['▣', 'dummy_floating.png'],
+      ['◨', 'dummy_tile.png'],
+      ['', 'dummy_tile.png'],
+    ]
 
 
 ENVIRONMENT VARIABLES
-	XICO_BASE      | prefix all output paths
-	XICO_SILENT    | silent query & result prints
+	XICO_DEBUG     | more verbose
+	XICO_SILENT    | no verbose
 
 
 SEE ALSO
@@ -64,7 +80,7 @@ ln -sfv xico /usr/bin/xico
 # Use it anywhere
 
 # Usage
-# xico --help
+xico --help
 ```
 
 TODO
