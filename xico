@@ -62,9 +62,9 @@ trap do.clean EXIT
 # -------------------- #
 
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
-  -u|--user)     CFG[mod]=fromtpl; shift;;
-  -t|--template) CFG[mod]=fromtpl; shift; CFG[tpl]="$1" ;;
   -c|--char)     CFG[mod]=fromchr; shift; CFG[chr]="$1" ;;
+  -t|--template) CFG[mod]=fromtpl; shift; CFG[tpl]="$1" ;;
+  -u|--user)     CFG[mod]=fromtpl; shift;               ;;
   -s|--size)     CFG[geo]="$2";    shift;               ;;
   -h|--help)     show.hlp                               ;;
   *)             show.hlp; do.fatal BAD_ARG             ;;
