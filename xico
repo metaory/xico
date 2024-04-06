@@ -9,69 +9,80 @@ set -E -o functrace
 
 declare TIME; TIME="$(date '+%s%3N')"
 declare BASE; BASE=$(dirname "$(realpath "$0")")
-declare XCNF="$HOME/.config/xico/config.toml"
-declare SYNOPSIS='xico [-t path] | [-u] | [-c char path]'
-declare -A CFG=( [geo]=500 [ext]=png [mod]=show.hlp [tpl]="$XCNF" )
-declare SVG="${BASE}/xico.svg"
-declare SED="${BASE}/xico.sed"
+declare XICO_CONFIG_HOME="${XDG_CONFIG_HOME}/xico"
+declare XICO_CONFIG="${XICO_CONFIG_HOME}/config.toml"
+declare XICO_CACHE="/tmp/xico"
+declare SYNOPSIS='xico [-h] | [-i INPUT_CHAR [--] OUTPUT_FILE] | [-c CONFIG_FILE]'
 
-function get.took { bc <<< "scale=2; $(( $(date '+%s%3N') - TIME ))/1000"; }
-function show.age { printf '\n\e[32mtook %ss\n' "$(get.took)"; }
-function show.hlp { printf '\n\e[34m  %s\n\n\n' "$SYNOPSIS"; }
-function show.err { printf '\n\e[31m %s\e[0m\n' "$*"; }
-function do.clean { (( $? )) && show.hlp; show.age; }
-function do.fatal { show.err "$*"; exit 1; }
 
-function fromchr {
-  local c="${1:-${CFG[chr]:?$(show.err NO_CHAR)}}"
-  local o="${2:-${CFG[out]:?$(show.err NO_PATH)}}"
+declare -A _S=(
+[geo]=500
+[ext]=png
+[mod]=show_hlp
+[cfg]="$XICO_CONFIG"
+[svg]="${BASE}/xico.svg"
+[sed]="${BASE}/xico.sed"
+)
 
-  local s="${CFG[geo]}"
+function get_took { bc <<< "scale=2; $(( $(date '+%s%3N') - TIME ))/1000"; }
+function show_age { printf '\n\e[32mtook %ss\n' "$(get_took)"; }
+function show_hlp { printf '\n\e[34m  %s\n\n\n' "$SYNOPSIS"; }
+function show_err { printf '\n\e[31m %s\e[0m\n' "$*"; }
+function do_clean { (( $? )) && show_hlp; show_age; }
+function do_fatal { show_err "$*"; exit 1; }
+
+function with_chr {
+  local c="${1:-${_S[chr]:?$(show_err BAD_INPUT_CHAR)}}"
+  local o="${2:-${_S[out]:?$(show_err BAD_OUTPUT_FILE)}}"
+
+  local s="${_S[geo]}"
   local b="${o%/*}"
-  local t="/tmp/xico/${RANDOM}.svg"
+  local t="${XICO_CACHE}/${RANDOM}.svg"
 
   [ "$o" != "$b" ] && ! [ -d "$b" ] && mkdir "$b" 2>/dev/null
 
   (( XICO_DEBUG )) && printf '%s:%s:->:%s___%s\n' "$t" "$c" "$o" "$b"
 
-  sed -e "s/__XICO__/${c}/" "$SVG" > "$t"
+  sed -e "s/__XICO__/${c}/" "${_S[svg]}" > "$t"
 
-  inkscape -w "$s" -h "$s" "$t" --export-type "${CFG[ext]}" -o "$o"
+  inkscape -w "$s" -h "$s" "$t" --export-type "${_S[ext]}" -o "$o"
 }
 
-function fromtpl {
+function with_cfg {
   local b
-  [ -e "${CFG[tpl]}" ] || do.fatal TPL_NOT_FOUND
+  [ -e "${_S[tpl]}" ] || do_fatal TPL_NOT_FOUND
   while read -r L; do
     k="${L%% *}"; v="${L##* }"
 
     [ "$k" == 'base' ] && b="${v}" && continue
 
-    fromchr "$k" "${b}/${v}"
-  done < <(sed -E -f "$SED" < "${CFG[tpl]}")
+    with_chr "$k" "${b}/${v}"
+  done < <(sed -E -f "${_C[sed]}" < "${_S[tpl]}")
 }
 
 # -------------------- #
 
-trap do.clean EXIT
+trap do_clean EXIT
 
-{ [ -e "$SVG" ] && [ -e "$SED" ]; } || do.fatal MISSING_INTERNALS
+{
+  [ -e "${_S[svg]}" ] && [ -e "${_C[sed]}" ];
+} || do_fatal MISSING_INTERNALS;
 
-  [ -d "/tmp/xico" ] || mkdir "$b" 2>/dev/null || true
+[ -d "${XICO_CACHE}" ] || mkdir "$b" 2>/dev/null || true
 
-# -------------------- #
+[ -e "$XICO_CONFIG" ] || { mkdir -p "${XICO_CONFIG_HOME}"; cp "${BASE}/sample.config.toml" "$XICO_CONFIG"; }
+
 
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
-  -c|--char)     CFG[mod]=fromchr; shift; CFG[chr]="$1" ;;
-  -t|--template) CFG[mod]=fromtpl; shift; CFG[tpl]="$1" ;;
-  -u|--user)     CFG[mod]=fromtpl; shift;               ;;
-  -s|--size)     CFG[geo]="$2";    shift;               ;;
-  -h|--help)     show.hlp                               ;;
-  *)             show.hlp; do.fatal BAD_ARG             ;;
+  -i|--input)  _S[mod]=with_chr; shift; _S[chr]="$1" ;;
+  -c|--config) _S[mod]=with_cfg; shift; _S[cfg]="$1" ;;
+  -s|--size)   _S[geo]="$2";     shift;              ;;
+  -h|--help)   show_hlp; exit   ;;
+  *)           do_fatal BAD_ARG ;;
 esac; shift; done
 
-CFG[out]="${*}"
+_S[out]="${*}"
 
-(( XICO_DEBUG )) && declare -p CFG
+(( XICO_DEBUG )) && declare -p _S
 
-${CFG[mod]}
+${_S[mod]}

@@ -7,36 +7,42 @@ NAME
 
 
 SYNOPSIS
-	xico [-h] [-c CHAR [--] FILE] | [-t FILE] | [-u]
+	xico [-h | --help] [-c | --config FILE] [-i | --input CHAR [--] OUTPUT_FILE];
 
 
 DESCRIPTION
-	xico is a simple way to make images from any unicode glyphs
+	xico is a simple cli tool to make images from unicode glyphs
+
+	output can only be png or svg
+
+	define a collection of jobs in user config "$XDG_CONFIG_HOME/xico/config.toml"
+
+    or specify alternative configuration file to use with "-c | --config FILE"
 
 
 OPTIONS
-	-c, --char <CHAR> <FILE>  image charecter & destination path
-	-t, --template <FILE>     generate from custom config
-	-u, --user <DIR>          generate from user config
-	-h, --help                display this & exit
-	 # -b, --background       [TODO] image background color
-	 # -f, --foreground       [TODO] image foreground color
-	 # -s, --size             [TODO] image size
+	-i, --input <INPUT_CHAR> <OUTPUT_FILE>  image character & destination path
+	-c, --config <CONFIG_FILE>              specify alternative configuration file to use
+											[default: $XDG_CONFIG_HOME/xico/config.toml]
+	-h, --help                              display help
+	 # -b, --background                     [TODO] image background color
+	 # -f, --foreground                     [TODO] image foreground color
+	 # -s, --size                           [TODO] image size
 
 
 EXAMPLES
-	# make a single image from a character
-	xico -c ▲ triangle.png
+	# convert one character
+	xico -i 𝝺 lambda.png
 
-	# make images from a xico config
-	xico -t awm_layouts.toml
+	# process with user configuration file
+	xico
 
-	# make images from user config ~/.config/xico/config.toml
-	xico -u
+	# process with alternative configuration file
+	xico -c awesome-xico.toml
 
 
 CONFIGURATION
-	bare minimum toml support, key/value pair, table, array
+	bare minimum toml support, key value pair, table, array
 
 	This section documents the root level of the configuration file.
 
@@ -56,7 +62,7 @@ CONFIGURATION
 
 
 SAMPLE
-	# ~/.config/xico/config.toml
+	# $XDG_CONFIG_HOME/xico/config.toml
 	[somekey]
 	icons = [
 	  ['⊖', '/tmp/nada/xorg.png'],
@@ -66,13 +72,13 @@ SAMPLE
 	[awesome.layout]
 	base = '~/.config/awesome/themes/meta/icons/layout'
 	icons = [
-	  ['▣', 'dummy_float.png'],
-	  ['◨', 'dummy_tiled.png'],
+	  ['⛛', 'dummy_float.png'],
+	  ['𝝺', 'dummy_tiled.png'],
 	  ['', 'dummy_uhumm.png'],
 	]
 
 
-ENVIRONMENT VARIABLES
+ENVIRONMENT.VARIABLES
 	XICO_DEBUG     | more verbose
 	XICO_SILENT    | less verbose
 

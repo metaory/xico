@@ -1,3 +1,5 @@
+# xico toml parser!!!
+
 /^\[|.*icons.*=/d
 s/[\x5b]|[\x5d]//g
 s/['",=]//g
