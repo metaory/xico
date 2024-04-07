@@ -3,8 +3,8 @@
 # [awesome.layout]
 # base = '~/.config/awesome/themes/meta/icons/layout'
 # icons = [
-#   ['▣', 'dummy_floating.png'],
-#   ['◨', 'dummy_tile.png'],
+#   ['⛛', 'dummy_floating.png'],
+#   ['𝝺', 'dummy_tile.png'],
 #   ['', 'dummy_tile.png'],
 # ]
 

@@ -12,8 +12,7 @@ declare BASE; BASE=$(dirname "$(realpath "$0")")
 declare XICO_CONFIG_HOME="${XDG_CONFIG_HOME}/xico"
 declare XICO_CONFIG="${XICO_CONFIG_HOME}/config.toml"
 declare XICO_CACHE="/tmp/xico"
-declare SYNOPSIS='xico [-h] | [-i INPUT_CHAR [--] OUTPUT_FILE] | [-c CONFIG_FILE]'
-
+declare SYNOPSIS='xico [-h | --help] [-c | --config FILE] [-i | --input CHAR [--] FILE]'
 
 declare -A _S=(
 [geo]=500

@@ -7,7 +7,7 @@ NAME
 
 
 SYNOPSIS
-	xico [-h | --help] [-c | --config FILE] [-i | --input CHAR [--] OUTPUT_FILE];
+	xico [-h | --help] [-c | --config FILE] [-i | --input CHAR [--] FILE];
 
 
 DESCRIPTION
@@ -17,17 +17,17 @@ DESCRIPTION
 
 	define a collection of jobs in user config "$XDG_CONFIG_HOME/xico/config.toml"
 
-    or specify alternative configuration file to use with "-c | --config FILE"
+	or specify alternative configuration file to use with "-c | --config FILE"
 
 
 OPTIONS
-	-i, --input <INPUT_CHAR> <OUTPUT_FILE>  image character & destination path
-	-c, --config <CONFIG_FILE>              specify alternative configuration file to use
-											[default: $XDG_CONFIG_HOME/xico/config.toml]
-	-h, --help                              display help
-	 # -b, --background                     [TODO] image background color
-	 # -f, --foreground                     [TODO] image foreground color
-	 # -s, --size                           [TODO] image size
+	-i, --input <CHAR> <FILE>	image character & destination path
+	-c, --config <FILE>			specify alternative configuration file to use
+								[default: $XDG_CONFIG_HOME/xico/config.toml]
+	-h, --help					display help
+	 # -b, --background			[TODO] image background color
+	 # -f, --foreground			[TODO] image foreground color
+	 # -s, --size				[TODO] image size
 
 
 EXAMPLES
@@ -83,7 +83,7 @@ ENVIRONMENT.VARIABLES
 	XICO_SILENT    | less verbose
 
 
-SEE ALSO
+SEE.ALSO
 	inkscape(1)
 
 
