@@ -3,7 +3,7 @@ XICO
 
 ```ex
 NAME
-	xico - make images from a character, user, custom config toml
+	xico - make images from a character or user custom config toml
 
 
 SYNOPSIS
@@ -21,13 +21,12 @@ DESCRIPTION
 
 
 OPTIONS
-	-i, --input <CHAR> <FILE>	image character & destination path
-	-c, --config <FILE>			specify alternative configuration file to use
-						[default: $XDG_CONFIG_HOME/xico/config.toml]
-	-h, --help					display help
-	 # -b, --background			[TODO] image background color
-	 # -f, --foreground			[TODO] image foreground color
-	 # -s, --size				[TODO] image size
+	-i, --input <CHAR> <FILE>	image character & destination-path
+	-c, --config <FILE>		specify alternative configuration file to use
+	-h, --help			display help
+	 # -b, --background		[TODO] image background color
+	 # -f, --foreground		[TODO] image foreground color
+	 # -s, --size			[TODO] image size
 
 
 EXAMPLES
@@ -42,9 +41,14 @@ EXAMPLES
 
 
 CONFIGURATION
-	bare minimum toml support, key value pair, table, array
+	xico looks for the configuration file at the following paths
+		1. "$XDG_CONFIG_HOME/xico/config.toml"
+		2. "$XDG_CONFIG_HOME/xico.toml"
+		3. "$HOME/.xico.toml"
 
-	This section documents the root level of the configuration file.
+	bare minimum toml support .keyvalue .pair .table .array
+
+	this section documents the root level of the configuration file
 
 	[<string>]
 
@@ -56,9 +60,9 @@ CONFIGURATION
 
 		icons = [ [<char>, <path>], ... ]
 
-			Array of icon tuples with two fields, the first is the character & second is the destination path.
+			Array of icon tuples with two fields, the first is the character & second is the destination path
 
-			It will be concatinated with the "base" key if defined.
+			It will be concatinated with the "base" key if defined
 
 
 SAMPLE
@@ -91,7 +95,7 @@ AUTHOR
 	metaory <metaory@gmail.com>, Apr 2024
 ```
 
--------------
+---
 
 
 Installation
@@ -124,3 +128,8 @@ TODO
 ====
 - [ ] Makefile
 
+---
+
+## License
+
+[MIT](LICENSE)
