@@ -23,7 +23,7 @@ DESCRIPTION
 OPTIONS
 	-i, --input <CHAR> <FILE>	image character & destination path
 	-c, --config <FILE>			specify alternative configuration file to use
-								[default: $XDG_CONFIG_HOME/xico/config.toml]
+						[default: $XDG_CONFIG_HOME/xico/config.toml]
 	-h, --help					display help
 	 # -b, --background			[TODO] image background color
 	 # -f, --foreground			[TODO] image foreground color
