@@ -1,5 +1,15 @@
 # ~/.config/xico/config.toml
 
+[demo]
+base = '/tmp/xico-demo'
+icons = [
+  ['𝝺', 'xico-lambda.png'],
+]
+
+
+# ✘ ⛛
+# 💀
+# ⬕ ◭ ⬢
 # [awesome.layout]
 # base = '~/.config/awesome/themes/meta/icons/layout'
 # icons = [

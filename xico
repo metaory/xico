@@ -1,27 +1,27 @@
 #!/bin/bash
-# shellcheck disable=SC2181
 
-set -o noclobber
 set -o errexit
-set -o pipefail
 set -o errtrace
+set -o pipefail
+set -o noclobber
 set -E -o functrace
 
+declare BASE; BASE=$(dirname "$(realpath "$0")")/src
 declare TIME; TIME="$(date '+%s%3N')"
-declare BASE; BASE=$(dirname "$(realpath "$0")")
-declare XICO_CONFIG_HOME="${XDG_CONFIG_HOME}/xico"
-declare XICO_CONFIG="${XICO_CONFIG_HOME}/config.toml"
 declare XICO_CACHE="/tmp/xico"
+declare XICO_HOME="${XDG_HOME:-${HOME}/.config}/xico"
+declare XICO_CONFIG="${XICO_HOME}/config.toml"
 declare SYNOPSIS='xico [-h | --help] [-c | --config FILE] [-i | --input CHAR [--] FILE]'
-
-declare -A _S=(
-[geo]=500
-[ext]=png
-[mod]=show_hlp
-[cfg]="$XICO_CONFIG"
-[svg]="${BASE}/xico.svg"
-[sed]="${BASE}/xico.sed"
+declare -A S=(
+  [geo]=500
+  [ext]=png
+  [mod]=with_cfg
+  [cfg]="$XICO_CONFIG"
+  [svg]="${BASE}/xico.svg"
+  [sed]="${BASE}/xico.sed"
 )
+
+source "${BASE}/debug.sh"
 
 function get_took { bc <<< "scale=2; $(( $(date '+%s%3N') - TIME ))/1000"; }
 function show_age { printf '\n\e[32mtook %ss\n' "$(get_took)"; }
@@ -31,32 +31,32 @@ function do_clean { (( $? )) && show_hlp; show_age; }
 function do_fatal { show_err "$*"; exit 1; }
 
 function with_chr {
-  local c="${1:-${_S[chr]:?$(show_err BAD_INPUT_CHAR)}}"
-  local o="${2:-${_S[out]:?$(show_err BAD_OUTPUT_FILE)}}"
+  local c="${1:-${S[chr]:?$(show_err BAD_INPUT_CHAR)}}"
+  local o="${2:-${S[out]:?$(show_err BAD_OUTPUT_FILE)}}"
 
-  local s="${_S[geo]}"
   local b="${o%/*}"
+  local s="${S[geo]}"
   local t="${XICO_CACHE}/${RANDOM}.svg"
 
-  [ "$o" != "$b" ] && ! [ -d "$b" ] && mkdir "$b" 2>/dev/null
+  debug c "$c" o "$o" b "$b" s "$s" t "$t"
 
-  (( XICO_DEBUG )) && printf '%s:%s:->:%s___%s\n' "$t" "$c" "$o" "$b"
+  [ -d "$b" ] || mkdir "$b" 2>/dev/null
 
-  sed -e "s/__XICO__/${c}/" "${_S[svg]}" > "$t"
+  sed -e "s/__XICO__/${c}/" "${S[svg]}" > "$t"
 
-  inkscape -w "$s" -h "$s" "$t" --export-type "${_S[ext]}" -o "$o"
+  inkscape -w "$s" -h "$s" "$t" --export-type "${S[ext]}" -o "$o"
 }
 
 function with_cfg {
   local b
-  [ -e "${_S[tpl]}" ] || do_fatal TPL_NOT_FOUND
+  [ -e "${S[tpl]}" ] || do_fatal TPL_NOT_FOUND
   while read -r L; do
     k="${L%% *}"; v="${L##* }"
 
     [ "$k" == 'base' ] && b="${v}" && continue
 
     with_chr "$k" "${b}/${v}"
-  done < <(sed -E -f "${_C[sed]}" < "${_S[tpl]}")
+  done < <(sed -E -f "${S[sed]}" < "${S[tpl]}")
 }
 
 # -------------------- #
@@ -64,24 +64,23 @@ function with_cfg {
 trap do_clean EXIT
 
 {
-  [ -e "${_S[svg]}" ] && [ -e "${_C[sed]}" ];
+  [ -d "${BASE}" ] && [ -e "${S[svg]}" ] && [ -e "${S[sed]}" ];
 } || do_fatal MISSING_INTERNALS;
 
 [ -d "${XICO_CACHE}" ] || mkdir "$b" 2>/dev/null || true
 
-[ -e "$XICO_CONFIG" ] || { mkdir -p "${XICO_CONFIG_HOME}"; cp "${BASE}/sample.config.toml" "$XICO_CONFIG"; }
+[ -e "$XICO_CONFIG" ] || { mkdir -p "${XICO_HOME}"; cp "${BASE}/sample.toml" "$XICO_CONFIG"; }
 
 
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
-  -i|--input)  _S[mod]=with_chr; shift; _S[chr]="$1" ;;
-  -c|--config) _S[mod]=with_cfg; shift; _S[cfg]="$1" ;;
-  -s|--size)   _S[geo]="$2";     shift;              ;;
+  -i|--input)  S[chr]="$2";S[out]="$3" ;;
+  -c|--config) S[cfg]="$2" ;;
+  -s|--size)   S[geo]="$2";;
   -h|--help)   show_hlp; exit   ;;
-  *)           do_fatal BAD_ARG ;;
 esac; shift; done
 
-_S[out]="${*}"
+debug WIP
+debug "${!XICO_@}"
+debug "${!S[@]}"
 
-(( XICO_DEBUG )) && declare -p _S
-
-${_S[mod]}
+${S[mod]}

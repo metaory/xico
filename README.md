@@ -83,7 +83,6 @@ SAMPLE
 
 
 ENVIRONMENT.VARIABLES
-	XICO_DEBUG     | more verbose
 	XICO_SILENT    | less verbose
 
 
