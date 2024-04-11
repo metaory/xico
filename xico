@@ -1,36 +1,41 @@
 #!/bin/bash
 
+#  ▀▄▀ █ █▀▀ █▀█
+#  █░█ █ █▄▄ █▄█
+
+###################
+#··· SHELLOPTS ····
 set -o errexit
 set -o errtrace
 set -o pipefail
 set -o noclobber
 set -E -o functrace
 
-declare BASE; BASE=$(dirname "$(realpath "$0")")/src
-declare TIME; TIME="$(date '+%s%3N')"
+###################
+#· DECLARATIONS ···
+declare BASE; BASE=$(dirname "$(realpath "$0")")
 declare XICO_CACHE="/tmp/xico"
 declare XICO_HOME="${XDG_HOME:-${HOME}/.config}/xico"
 declare XICO_CONFIG="${XICO_HOME}/config.toml"
 declare SYNOPSIS='xico [-h | --help] [-c | --config FILE] [-i | --input CHAR [--] FILE]'
+
 declare -A S=(
   [geo]=500
   [ext]=png
-  [mod]=with_cfg
   [cfg]="$XICO_CONFIG"
-  [svg]="${BASE}/xico.svg"
-  [sed]="${BASE}/xico.sed"
+  [svg]="${BASE}/src/xico.svg"
+  [sed]="${BASE}/src/xico.sed"
 )
 
-source "${BASE}/debug.sh"
-
-function get_took { bc <<< "scale=2; $(( $(date '+%s%3N') - TIME ))/1000"; }
-function show_age { printf '\n\e[32mtook %ss\n' "$(get_took)"; }
+###################
+#· DEFINITIONS ····
 function show_hlp { printf '\n\e[34m  %s\n\n\n' "$SYNOPSIS"; }
 function show_err { printf '\n\e[31m %s\e[0m\n' "$*"; }
-function do_clean { (( $? )) && show_hlp; show_age; }
+
+function do_clean { (( $? )) && show_hlp ; }
 function do_fatal { show_err "$*"; exit 1; }
 
-function with_chr {
+function with_char {
   local c="${1:-${S[chr]:?$(show_err BAD_INPUT_CHAR)}}"
   local o="${2:-${S[out]:?$(show_err BAD_OUTPUT_FILE)}}"
 
@@ -38,49 +43,60 @@ function with_chr {
   local s="${S[geo]}"
   local t="${XICO_CACHE}/${RANDOM}.svg"
 
-  debug c "$c" o "$o" b "$b" s "$s" t "$t"
-
-  [ -d "$b" ] || mkdir "$b" 2>/dev/null
+  {
+    [ "$b" != "$o" ] && ! [ -d "$b" ];
+  } && mkdir "$b" 2>/dev/null
 
   sed -e "s/__XICO__/${c}/" "${S[svg]}" > "$t"
 
   inkscape -w "$s" -h "$s" "$t" --export-type "${S[ext]}" -o "$o"
 }
 
-function with_cfg {
+function load_config {
+  [ -e "${S[cfg]}" ] || do_fatal TPL_NOT_FOUND
+
+  cat "${S[cfg]}" - <<< "in 10s";  sleep 10
+
   local b
-  [ -e "${S[tpl]}" ] || do_fatal TPL_NOT_FOUND
   while read -r L; do
     k="${L%% *}"; v="${L##* }"
 
     [ "$k" == 'base' ] && b="${v}" && continue
 
-    with_chr "$k" "${b}/${v}"
-  done < <(sed -E -f "${S[sed]}" < "${S[tpl]}")
+    with_char  "$k" "${b}/${v}"
+  done < <(sed -E -f "${S[sed]}" < "${S[cfg]}")
 }
 
-# -------------------- #
 
+
+###################
+#· ERROR TRAPS ····
 trap do_clean EXIT
 
 {
-  [ -d "${BASE}" ] && [ -e "${S[svg]}" ] && [ -e "${S[sed]}" ];
+  [ -d "${BASE}/src" ] && [ -e "${S[svg]}" ] && [ -e "${S[sed]}" ];
 } || do_fatal MISSING_INTERNALS;
 
-[ -d "${XICO_CACHE}" ] || mkdir "$b" 2>/dev/null || true
+[ -d "${XICO_CACHE}" ] || mkdir "${XICO_CACHE}" 2>/dev/null || true
 
-[ -e "$XICO_CONFIG" ] || { mkdir -p "${XICO_HOME}"; cp "${BASE}/sample.toml" "$XICO_CONFIG"; }
+[ -e "$XICO_CONFIG" ] || {
+  mkdir -p "${XICO_HOME}"
+  cp "${BASE}/src/sample.toml" "$XICO_CONFIG";
+}
 
+###################
+#· CONTROL ········
+source "${BASE}/src/debug.sh"
 
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
   -i|--input)  S[chr]="$2";S[out]="$3" ;;
-  -c|--config) S[cfg]="$2" ;;
+  -c|--config) S[cfg]="$2";;
   -s|--size)   S[geo]="$2";;
   -h|--help)   show_hlp; exit   ;;
 esac; shift; done
 
-debug WIP
-debug "${!XICO_@}"
-debug "${!S[@]}"
+debug "${!XICO_@}"; debug "${!S[@]}"
 
-${S[mod]}
+[ -n "${S[chr]}" ] && { with_char; exit;  }
+
+load_config

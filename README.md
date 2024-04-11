@@ -96,6 +96,13 @@ AUTHOR
 
 ---
 
+Requirements
+------------
+
+- [inkscape](https://gitlab.com/inkscape/inkscape)
+
+---
+
 
 Installation
 ------------
@@ -126,6 +133,13 @@ xico --help
 TODO
 ====
 - [ ] Makefile
+
+---
+
+```
+  ▀▄▀ █ █▀▀ █▀█
+  █░█ █ █▄▄ █▄█
+```
 
 ---
 
