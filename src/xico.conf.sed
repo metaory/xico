@@ -1,4 +1,4 @@
-# xico toml parser!!!
+# xico.conf parser!
 
 /^\[|.*icons.*=/d
 s/[\x5b]|[\x5d]//g

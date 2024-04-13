@@ -1,21 +1,25 @@
 XICO
 ====
 
+     ╴╴─  ╶───╶╶─╴─╶╶ ╴  ╴   ╴ ╶─╴── ╴─ ╶──
+
 ```ex
 NAME
-	xico - make images from a character or user custom config toml
+	xico - make images from unicode characters or user custom config
 
 
 SYNOPSIS
-	xico [-h | --help] [-c | --config FILE] [-i | --input CHAR [--] FILE];
+	xico [-h | --help] [-c | --config FILE] [-i | --input CHAR [-] FILE];
 
 
 DESCRIPTION
 	xico is a simple cli tool to make images from unicode glyphs
 
+	with no FILE, or when FILE is -, read standard input
+
 	output can only be png or svg
 
-	define a collection of jobs in user config "$XDG_CONFIG_HOME/xico/config.toml"
+	define a collection of jobs in user config "$XDG_CONFIG_HOME/xico/xico.conf"
 
 	or specify alternative configuration file to use with "-c | --config FILE"
 
@@ -37,49 +41,69 @@ EXAMPLES
 	xico
 
 	# process with alternative configuration file
-	xico -c awesome-xico.toml
+	xico -c awesome-xico.conf
 
 
 CONFIGURATION
 	xico looks for the configuration file at the following paths
-		1. "$XDG_CONFIG_HOME/xico/config.toml"
-		2. "$XDG_CONFIG_HOME/xico.toml"
-		3. "$HOME/.xico.toml"
+		1. "$XDG_CONFIG_HOME/xico/xico.conf"
+		2. "$XDG_CONFIG_HOME/xico.conf"
+		3. "$HOME/.xico.conf"
 
-	bare minimum toml support .keyvalue .pair .table .array
+
+	simple key value options with at least one blank character (<Space> or <Tab>)
 
 	this section documents the root level of the configuration file
 
-	[<string>]
+	# default size (mm)
+	size 	500
 
-		Define logical tables to group collections
+	# default bg (rgba|transparent)
+	bg 	500
 
-		base = ''
+	# default font (monospace)
+	font 	monospace
 
-			Optional base path for the group "icons" destinations
+	# define logical groups
 
-		icons = [ [<char>, <path>], ... ]
+	# relative to working directory
+	⨷ 	./error.png
+	𝞵 	./foo/micro.png
 
-			Array of icon tuples with two fields, the first is the character & second is the destination path
+	# absolute path
+	᮷ 	~/dev/acme/assets/ico/head_1.png
+	᳅ 	~/dev/acme/assets/ico/head_2.png
 
-			It will be concatinated with the "base" key if defined
+	# use env variables
+	𑣐 	/tmp/curve_${RANDOM}.png
+	𑣉 	${XDG_CONFIG_HOME}/xyzzy/curve.png
 
+	# the missing directories will be created
+	𐰁 	~/pics/fuga/edge_1.png
+	𐰒 	~/pics/fuga/edge_2.png
 
-SAMPLE
-	# $XDG_CONFIG_HOME/xico/config.toml
-	[somekey]
-	icons = [
-	  ['⊖', '/tmp/nada/xorg.png'],
-	  ['◪', 'noop.png'],
-	]
+	# set a base path for remaining items
+	base 	~/pics/widgets
 
-	[awesome.layout]
-	base = '~/.config/awesome/themes/meta/icons/layout'
-	icons = [
-	  ['⛛', 'dummy_float.png'],
-	  ['𝝺', 'dummy_tiled.png'],
-	  ['', 'dummy_uhumm.png'],
-	]
+	# the example bellow will write to
+	# 	~/pics/widgets/char_a.png
+	# 	~/pics/widgets/char_e.png
+	# 	~/pics/widgets/char_f.png
+
+	𑢴 	char_a.png
+	𑢦 	char_e.png
+	𑢢 	char_f.png
+
+	# 	reset the base path
+	base 	~/.config/frob
+
+	# the example bellow will write to
+	# 	~/.config/frob/hoge.png
+	# 	~/.config/frob/state/nyoro.png
+
+	た 	hoge.png
+	テ 	state/nyoro.png
+
 
 
 ENVIRONMENT.VARIABLES
@@ -99,7 +123,7 @@ AUTHOR
 Requirements
 ------------
 
-- [inkscape](https://gitlab.com/inkscape/inkscape)
+- [Inkscape](https://gitlab.com/inkscape/inkscape)
 
 ---
 
@@ -133,13 +157,13 @@ xico --help
 TODO
 ====
 - [ ] Makefile
+- [ ] Attributes; bg, fg, font, size
+- [ ] Fallback engines for Inkscape, Cairo, Convert, ...
 
 ---
 
-```
-  ▀▄▀ █ █▀▀ █▀█
-  █░█ █ █▄▄ █▄█
-```
+	▀▄▀ █ █▀▀ █▀█
+	█░█ █ █▄▄ █▄█
 
 ---
 

@@ -1,22 +1,20 @@
 #!/bin/bash
 
-#  ▀▄▀ █ █▀▀ █▀█
-#  █░█ █ █▄▄ █▄█
-
-###################
-#··· SHELLOPTS ····
+#
+#  ▀▀  SHELLOPTS
+# ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 set -o errexit
 set -o errtrace
 set -o pipefail
 set -o noclobber
-set -E -o functrace
 
-###################
-#· DECLARATIONS ···
+#
+# ▀▀▀  DECLARATIONS
+# ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 declare BASE; BASE=$(dirname "$(realpath "$0")")
 declare XICO_CACHE="/tmp/xico"
 declare XICO_HOME="${XDG_HOME:-${HOME}/.config}/xico"
-declare XICO_CONFIG="${XICO_HOME}/config.toml"
+declare XICO_CONFIG="${XICO_HOME}/xico.conf"
 declare SYNOPSIS='xico [-h | --help] [-c | --config FILE] [-i | --input CHAR [--] FILE]'
 
 declare -A S=(
@@ -24,21 +22,25 @@ declare -A S=(
   [ext]=png
   [cfg]="$XICO_CONFIG"
   [svg]="${BASE}/src/xico.svg"
-  [sed]="${BASE}/src/xico.sed"
+  [sed]="${BASE}/src/xico.conf.sed"
 )
 
-###################
-#· DEFINITIONS ····
-function show_hlp { printf '\n\e[34m  %s\n\n\n' "$SYNOPSIS"; }
-function show_err { printf '\n\e[31m %s\e[0m\n' "$*"; }
+#
+# ▀▀▀  SOURCES
+# ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+# shellcheck source=/dev/null
+source "${BASE}"/src/xico.debug.sh
 
-function do_clean { (( $? )) && show_hlp ; }
-function do_fatal { show_err "$*"; exit 1; }
-
-function with_char {
-  local c="${1:-${S[chr]:?$(show_err BAD_INPUT_CHAR)}}"
-  local o="${2:-${S[out]:?$(show_err BAD_OUTPUT_FILE)}}"
-
+#
+# ▀▀▀  DEFINITIONS
+# ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+function xico.echo { printf "\e[3${1}m%s\e[0m\n" "${*:2}"; }
+function xico.fail { xico.echo 1 "[ERROR] $*"; exit 1; }
+function xico.help { xico.echo 4 "$SYNOPSIS"; }; # shellcheck disable=SC2317
+function xico.trap { (( $? )) && xico.help; }
+function xico.make {
+  local c="${1:-${S[chr]:?$(xico.kill BAD_INPUT_CHAR)}}"
+  local o="${2:-${S[out]:?$(xico.kill BAD_OUTPUT_FILE)}}"
   local b="${o%/*}"
   local s="${S[geo]}"
   local t="${XICO_CACHE}/${RANDOM}.svg"
@@ -47,13 +49,12 @@ function with_char {
     [ "$b" != "$o" ] && ! [ -d "$b" ];
   } && mkdir "$b" 2>/dev/null
 
-  sed -e "s/__XICO__/${c}/" "${S[svg]}" > "$t"
+  sed -e "s/__xico._/${c}/" "${S[svg]}" > "$t"
 
   inkscape -w "$s" -h "$s" "$t" --export-type "${S[ext]}" -o "$o"
 }
-
-function load_config {
-  [ -e "${S[cfg]}" ] || do_fatal TPL_NOT_FOUND
+function xico.conf {
+  [ -e "${S[cfg]}" ] || xico.fail TPL_NOT_FOUND
 
   cat "${S[cfg]}" - <<< "in 10s";  sleep 10
 
@@ -63,40 +64,55 @@ function load_config {
 
     [ "$k" == 'base' ] && b="${v}" && continue
 
-    with_char  "$k" "${b}/${v}"
+    xico.make  "$k" "${b}/${v}"
   done < <(sed -E -f "${S[sed]}" < "${S[cfg]}")
 }
 
-
-
-###################
-#· ERROR TRAPS ····
-trap do_clean EXIT
+#
+# ▀▀▀  ERROR TRAPS
+# ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+trap xico.trap EXIT
 
 {
   [ -d "${BASE}/src" ] && [ -e "${S[svg]}" ] && [ -e "${S[sed]}" ];
-} || do_fatal MISSING_INTERNALS;
+} || xico.fail MISSING_INTERNALS;
 
 [ -d "${XICO_CACHE}" ] || mkdir "${XICO_CACHE}" 2>/dev/null || true
 
 [ -e "$XICO_CONFIG" ] || {
   mkdir -p "${XICO_HOME}"
-  cp "${BASE}/src/sample.toml" "$XICO_CONFIG";
+  cp "${BASE}/src/xico.conf" "$XICO_CONFIG";
 }
-
-###################
-#· CONTROL ········
-source "${BASE}/src/debug.sh"
-
+#
+# ▀▀▀  MAIN
+# ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
   -i|--input)  S[chr]="$2";S[out]="$3" ;;
   -c|--config) S[cfg]="$2";;
   -s|--size)   S[geo]="$2";;
-  -h|--help)   show_hlp; exit   ;;
+  -h|--help)   xico.help; exit   ;;
 esac; shift; done
 
-debug "${!XICO_@}"; debug "${!S[@]}"
+xico.debug "${!XICO_@}"; xico.debug "${!S[@]}"
 
-[ -n "${S[chr]}" ] && { with_char; exit;  }
+[ -z "$XICO_DEBUG" ] && {
+  xico.echo 3 $'\n 🚧 -- WIP -- 🚧\n'
+  xico.echo 2 "set XICO_DEBUG to 1 for dev"
+  exit
+}
 
-load_config
+[ ! -t 0 ] && { read -r x; S[chr]="$x"; }
+
+[ -n "${S[chr]}" ] && { xico.make; exit; }
+
+xico.conf
+
+#
+#
+#  ▀▄▀ █ █▀▀ █▀█
+#  █░█ █ █▄▄ █▄█
+#  ▁▁▁▁▁▁▁▁v0.1▁
+#
+#
+
+# vim:ft=bash

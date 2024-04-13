@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function debug {
+function xico.debug {
     (( XICO_SILENT )) && return
     local k="$1";  local v="$2"
     local c=0;     local s="${#k}"
