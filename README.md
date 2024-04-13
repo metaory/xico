@@ -48,7 +48,6 @@ CONFIGURATION
 		2. "$XDG_CONFIG_HOME/xico.conf"
 		3. "$HOME/.xico.conf"
 
-
 	simple key value options with at least one blank character (<Space> or <Tab>)
 
 	this section documents the root level of the configuration file
@@ -57,7 +56,7 @@ CONFIGURATION
 	size 	500
 
 	# default bg (rgba|transparent)
-	bg 	500
+	bg 	transparent
 
 	# default font (monospace)
 	font 	monospace
@@ -92,7 +91,7 @@ CONFIGURATION
 	𑢦 	char_e.png
 	𑢢 	char_f.png
 
-	# 	reset the base path
+	# reset the base path
 	base 	~/.config/frob
 
 	# the example bellow will write to
@@ -105,6 +104,7 @@ CONFIGURATION
 
 ENVIRONMENT.VARIABLES
 	XICO_SILENT    | less verbose
+	XICO_DEBUG     | debug mode
 
 
 SEE.ALSO
