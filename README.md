@@ -1,8 +1,6 @@
 XICO
 ====
 
-     ╴╴─  ╶───╶╶─╴─╶╶ ╴  ╴   ╴ ╶─╴── ╴─ ╶──
-
 ```ex
 NAME
 	xico - make images from unicode characters or user custom config
@@ -103,7 +101,6 @@ CONFIGURATION
 
 	た 	hoge.png
 	テ 	state/nyoro.png
-
 
 
 ENVIRONMENT.VARIABLES
