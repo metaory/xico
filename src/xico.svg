@@ -2,48 +2,41 @@
 <!-- metaory <metaory@gmail.com>, Apr 2024 -->
 
 <svg
-   width="500mm"
-   height="500mm"
-   viewBox="0 0 500 500"
-   version="1.1"
-   id="mainsvg"
-   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
-   sodipodi:docname="xicon-single.svg"
-   inkscape:export-filename="xicon.png"
-   inkscape:export-xdpi="15"
-   inkscape:export-ydpi="15"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="mainview"
-     pagecolor="#111122"
-     bordercolor="#4411CC"
-     borderopacity="1"
-     inkscape:showpageshadow="0"
-     inkscape:pageopacity="0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#223333"
-     inkscape:document-units="mm"
-     inkscape:zoom="0.34395833"
-     inkscape:cx="944.8819"
-     inkscape:cy="944.8819"
-     inkscape:window-width="2520"
-     inkscape:window-height="940"
-     inkscape:window-x="1080"
-     inkscape:window-y="100"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="mainsvg"
-     inkscape:export-bgcolor="#00000000"
-     showgrid="false" />
+    width="500mm"
+    height="500mm"
+    viewBox="0 0 500 500"
+    version="1.1"
+    id="xico::main.svg"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="maindefs" />
-  <text
-     xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:370px;line-height:1.25;font-family:'Monaspace Argon';-inkscape-font-specification:'Monaspace Argon, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;opacity:1;mix-blend-mode:normal;fill:#11aa22;fill-opacity:1;stroke:#4411cc;stroke-width:75;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:0;paint-order:stroke markers fill"
-     x="60"
-     y="370"
-     id="xtext"
-     inkscape:label="glyph">__XICO__</text>
+      id="xico::defs" />
+  <rect
+      id="xico::bg"
+      display="none"
+      fill="__XICO_BG__"
+      width="100%"
+      height="100%" />
+
+  <circle
+      id="xico::cg"
+      display="none"
+      fill="__XICO_CG__"
+      cx="50%"
+      cy="50%"
+      r="45%" />
+
+  <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24" >
+      <text
+          x="50%"
+          y="70%"
+          text-anchor="middle"
+          font-family="monospace"
+          font-size="150%"
+          id="xico::ic"
+          fill="__XICO_FG__"
+          >__XICO_IC__</text>
+  </svg>
 </svg>

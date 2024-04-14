@@ -1,7 +1,6 @@
 #!/bin/bash
 
-#
-#  ▀▀  SHELLOPTS
+#   ▀  SHELLOPTS
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 set -o errexit
 set -o errtrace
@@ -9,14 +8,13 @@ set -o pipefail
 set -o noclobber
 
 #
-# ▀▀▀  DECLARATIONS
+#   ▀  DECLARATIONS
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 declare BASE; BASE=$(dirname "$(realpath "$0")")
 declare XICO_CACHE="/tmp/xico"
 declare XICO_HOME="${XDG_HOME:-${HOME}/.config}/xico"
 declare XICO_CONFIG="${XICO_HOME}/xico.conf"
-declare SYNOPSIS='xico [-h | --help] [-c | --config FILE] [-i | --input CHAR [--] FILE]'
-
+declare SYNOPSIS='xico [-h | --help] [-c | --config FILE] [-i | --input CHAR [-] FILE];'
 declare -A S=(
   [geo]=500
   [ext]=png
@@ -26,13 +24,13 @@ declare -A S=(
 )
 
 #
-# ▀▀▀  SOURCES
+#   ▀  SOURCES
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 # shellcheck source=/dev/null
 source "${BASE}"/src/xico.debug.sh
 
 #
-# ▀▀▀  DEFINITIONS
+#   ▀  DEFINITIONS
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 function xico.echo { printf "\e[3${1}m%s\e[0m\n" "${*:2}"; }
 function xico.fail { xico.echo 1 "[ERROR] $*"; exit 1; }
@@ -44,12 +42,23 @@ function xico.make {
   local b="${o%/*}"
   local s="${S[geo]}"
   local t="${XICO_CACHE}/${RANDOM}.svg"
+  echo "c $c"
+  echo "o $o"
+
+local fg='#4400ff'
+local bg='#00000000'
+local cg='#552244'
 
   {
     [ "$b" != "$o" ] && ! [ -d "$b" ];
   } && mkdir "$b" 2>/dev/null
 
-  sed -e "s/__xico._/${c}/" "${S[svg]}" > "$t"
+  sed \
+    -e "s/__XICO_IC__/${c}/g" \
+    -e "s/__XICO_FG__/${fg}/g" \
+    -e "s/__XICO_BG__/${bg}/g" \
+    -e "s/__XICO_CG__/${cg}/g" \
+    "${S[svg]}" > "$t"
 
   inkscape -w "$s" -h "$s" "$t" --export-type "${S[ext]}" -o "$o"
 }
@@ -69,7 +78,7 @@ function xico.conf {
 }
 
 #
-# ▀▀▀  ERROR TRAPS
+#   ▀  ERROR TRAPS
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 trap xico.trap EXIT
 
@@ -84,7 +93,7 @@ trap xico.trap EXIT
   cp "${BASE}/src/xico.conf" "$XICO_CONFIG";
 }
 #
-# ▀▀▀  MAIN
+#   ▀  MAIN
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
   -i|--input)  S[chr]="$2";S[out]="$3" ;;
@@ -105,7 +114,7 @@ xico.debug "${!XICO_@}"; xico.debug "${!S[@]}"
 
 [ -n "${S[chr]}" ] && { xico.make; exit; }
 
-xico.conf
+# xico.conf
 
 #
 #
