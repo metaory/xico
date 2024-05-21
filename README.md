@@ -98,11 +98,10 @@ OPTIONS
 		show help menu
 [[-] <INPUT_CHAR>]
 
+
 .
 EXAMPLES
-```
 
-```sh
 	# convert one character
 	xico -i 𝝺 -o lambda.png
 
