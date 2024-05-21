@@ -1,13 +1,48 @@
 XICO
 ====
 
+<p align="middle">
+  <img src=".github/assets/01.png" width="100" />
+  <img src=".github/assets/02.png" width="100" />
+  <img src=".github/assets/03.png" width="100" />
+  <img src=".github/assets/04.png" width="100" />
+  <img src=".github/assets/05.png" width="100" />
+  <img src=".github/assets/06.png" width="100" />
+  <img src=".github/assets/07.png" width="100" />
+  <img src=".github/assets/08.png" width="100" />
+  <img src=".github/assets/09.png" width="100" />
+  <img src=".github/assets/10.png" width="100" />
+  <img src=".github/assets/11.png" width="100" />
+  <img src=".github/assets/12.png" width="100" />
+  <img src=".github/assets/13.png" width="100" />
+  <img src=".github/assets/14.png" width="100" />
+  <img src=".github/assets/15.png" width="100" />
+  <img src=".github/assets/16.png" width="100" />
+  <img src=".github/assets/17.png" width="100" />
+  <img src=".github/assets/18.png" width="100" />
+</p>
+
 ```ex
 NAME
 	xico - make images from unicode characters or user custom config
 
 
 SYNOPSIS
-	xico [-h | --help] [-c | --config FILE] [-i | --input CHAR [-] FILE];
+  xico
+     -i | --input       <INPUT_CHAR>
+     -o | --output      <OUTPUT_FILE>
+    [-fg| --foreground  <HEX|NAME>]
+    [-bg| --background  <HEX|NAME>]
+    [-fs| --font-size   <SIZE_PX|SIZE_EM>]
+    [-ff| --font-family <FONT_FAMILY>]
+    [-fw| --font-weight <NORMAL|BOLD|BOLDER>]
+    [-s | --size        <SIZE_INT>]
+    [-x | --x-pos       <POSITION_X>]
+    [-y | --y-pos       <POSITION_Y>]
+    [-c | --config      <CONFIG_FILE>]
+    [-r | --round]
+    [-h | --help]
+  [[-] <INPUT_CHAR>]
 
 
 DESCRIPTION
@@ -23,23 +58,63 @@ DESCRIPTION
 
 
 OPTIONS
-	-i, --input <CHAR> <FILE>	image character & destination-path
-	-c, --config <FILE>		specify alternative configuration file to use
-	-h, --help			display help
-	 # -b, --background		[TODO] image background color
-	 # -f, --foreground		[TODO] image foreground color
-	 # -s, --size			[TODO] image size
+	-i | --input       *<INPUT_CHAR>
+		 a single character. -i 'λ'
 
+	-o | --output      *<OUTPUT_FILE>
+		output image path. -o ~/pics/xyzzy/hoge.png
 
+	[-fg| --foreground  <HEX|NAME>]
+		the icon foreground color in '#RGB' or NAME -fg '#4411FF'
+
+	[-bg| --background  <HEX|NAME>]
+		the icon background color in '#RGB' or NAME -bg '#AA22EE'
+
+	[-fs| --font-size   <SIZE_PX|SIZE_EM>]
+		the font size in em or px -fs 32px
+
+	[-ff| --font-family <FONT_FAMILY>]
+		the font family used -ff NotoSans
+
+	[-fw| --font-weight <NORMAL|BOLD|BOLDER>]
+		the font weight -fw bold
+
+	[-s | --size        <SIZE_INT>]
+		the final image size -s 128 would result in a '128x128' pixel png
+
+	[-x | --x-pos       <POSITION_X>]
+		adjust the x position of the character to align further
+
+	[-y | --y-pos       <POSITION_Y>]
+		adjust the y position of the character to justify further
+
+	[-c | --config      <CONFIG_FILE>]
+		specify alternative configuration file to use
+
+	[-r | --round]
+		flag to set the background shape rounded
+
+	[-h | --help]
+		show help menu
+[[-] <INPUT_CHAR>]
+
+.
 EXAMPLES
-	# convert one character
-	xico -i 𝝺 lambda.png
+```
 
-	# process with user configuration file
-	xico
+```sh
+	# convert one character
+	xico -i 𝝺 -o lambda.png
+
+	# create png from character with rounded cover, custom fg and bg, font size and y position
+	xico -i 𝝺 -r -bg '#112233' -fg '#4411ff' -o ~/pics/x1.png -fs 7em -y 78
+
+	# create a new image from character with custom color, transparent background and default config
+	xico -fg '#AA1144' -i ✪ -o ~/pics/x2.png
 
 	# process with alternative configuration file
-	xico -c awesome-xico.conf
+	# xico -c awesome-xico.conf
+
 
 
 CONFIGURATION
@@ -154,7 +229,7 @@ xico --help
 TODO
 ====
 - [ ] Makefile
-- [ ] Attributes; bg, fg, font, size
+- [x] Attributes; bg, fg, font, size
 - [ ] Fallback engines for Inkscape, Cairo, Convert, ...
 
 ---

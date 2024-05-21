@@ -2,41 +2,40 @@
 <!-- metaory <metaory@gmail.com>, Apr 2024 -->
 
 <svg
-    width="500mm"
-    height="500mm"
-    viewBox="0 0 500 500"
-    version="1.1"
-    id="xico::main.svg"
-    xmlns="http://www.w3.org/2000/svg"
-    xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-      id="xico::defs" />
+    width     = "500px"
+    height    = "500px"
+    viewBox   = "0 0 100 100"
+    version   = "1.1"
+    id        = "xico::main.svg"
+    xmlns     = "http://www.w3.org/2000/svg"
+    xmlns:svg = "http://www.w3.org/2000/svg">
+
+  <defs id="xico::defs"/>
+
   <rect
-      id="xico::bg"
-      display="none"
-      fill="__XICO_BG__"
-      width="100%"
-      height="100%" />
+      id     = "xico::bg"
+      fill   = "__XICO_BG__"
+      style  = "fill-opacity:__XICO_BO__"
+      width  = "100"
+      height = "100"
+      />
 
   <circle
-      id="xico::cg"
-      display="none"
-      fill="__XICO_CG__"
-      cx="50%"
-      cy="50%"
-      r="45%" />
+      id    = "xico::cg"
+      fill  = "__XICO_BG__"
+      style = "fill-opacity:__XICO_CO__"
+      cx    = "50"
+      cy    = "50"
+      r     = "48" />
 
-  <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24" >
-      <text
-          x="50%"
-          y="70%"
-          text-anchor="middle"
-          font-family="monospace"
-          font-size="150%"
-          id="xico::ic"
-          fill="__XICO_FG__"
-          >__XICO_IC__</text>
-  </svg>
+  <text
+      x           = "__XICO_X__"
+      y           = "__XICO_Y__"
+      font-family = "__XICO_FONT_FAMILY__"
+      font-size   = "__XICO_FONT_SIZE__"
+      font-weight = "__XICO_FONT_WEIGHT__"
+      text-anchor = "middle"
+      id          = "xico::ic"
+      fill        = "__XICO_FG__"
+      >__XICO_IC__</text>
 </svg>
