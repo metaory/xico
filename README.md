@@ -1,6 +1,12 @@
 XICO
 ====
 
+### simple cli to make png images from ascii characters
+
+<p align="middle">
+  <img src=".github/assets/xico.png" />
+</p>
+
 <p align="middle">
   <img src=".github/assets/x01.png" width="100" />
   <img src=".github/assets/x02.png" width="100" />
@@ -22,172 +28,272 @@ XICO
   <img src=".github/assets/x18.png" width="100" />
 </p>
 
-```ex
-NAME
-	xico - make images from unicode characters or user custom config
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+## DESCRIPTION
+
+`xico` is a simple `svg` template.
+
+Rendered with options from command-line or a template file.
+
+It creates `png` images from the `svg`
+
+The `svg` contains only 2 elements
+- `<rect>` [SVG/Element/rect](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect)
+- `<text>`  [SVG/Element/text](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text)
+
+Most of their attributes [rect attr](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect#attributes) [text attr](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text#attributes) are added.
+
+Check [Custom Attributes](#custom-attributes) section for adding custom attributes.
+
+## SYNOPSIS
+
+	xico [OPTION]... CHARACTER FILE
 
 
-SYNOPSIS
-  xico
-     -i | --input       <INPUT_CHAR>
-     -o | --output      <OUTPUT_FILE>
-    [-fg| --foreground  <HEX|NAME>]
-    [-bg| --background  <HEX|NAME>]
-    [-fs| --font-size   <SIZE_PX|SIZE_EM>]
-    [-ff| --font-family <FONT_FAMILY>]
-    [-fw| --font-weight <NORMAL|BOLD|BOLDER>]
-    [-s | --size        <SIZE_INT>]
-    [-x | --x-pos       <POSITION_X>]
-    [-y | --y-pos       <POSITION_Y>]
-    [-c | --config      <CONFIG_FILE>]
-    [-r | --round]
-    [-h | --help]
-  [[-] <INPUT_CHAR>]
+## Options
+
+### CLI Only Options
+
+These options are only available on CLI
+
+| cli options      | alias  |
+| ---------------- | ------ |
+| --template       | -t     |
+| --help           | -h     |
+| --no-delay       |        |
+
+### Options
+
+These options are available in template and CLI
+
+| options          | alias  | default    |
+| ---------------- | ------ | ---------- |
+| bg-fill          | bg     |  black     |
+| bg-width         | w      |  100       |
+| bg-height        | h      |  100       |
+| bg-opacity       |        |  1         |
+| bg-rx            | r      |  25        |
+| bg-ry            | r      |  25        |
+| bg-x             |        |  0         |
+| bg-y             |        |  0         |
+| text-fill        | fg     |  #3311FF   |
+| text-font-family | ff     |  monospace |
+| text-font-weight | fw     |  bold      |
+| text-font-size   | fs     |  8em       |
+| text-dx          |        |  0         |
+| text-dy          |        |  0         |
+| text-x           |        |  50        |
+| text-y           |        |  50        |
+| size             | s      |  500       |
+| delay            | d      |  3         |
+
+#### CLI Usage
+
+> [!NOTE]
+> In command-line
+>
+> long-options prefixed with double hyphen `--`
+> aliases with single hyphen `-`
+>
+> eg. `--text-font-size 9em` or `-fs 9em`
+
+eg.
+
+	xico --bg-fill '#3300FF'
+
+Or alias if available
+
+	xico -bg '#3300FF'
+
+#### Template Usage
+
+All options or their alias can be set in a _xico template_ `*.xc.conf`
+
+`set`, `put` and `pre` are the only commands
+
+##### Set command
+
+	set <option> <value>
+
+This will set or update the option
+
+`set` commands can be repeated, the latest would take precedence.
 
 
-DESCRIPTION
-	xico is a simple cli tool to make images from unicode glyphs
+	# foo.xc.conf
 
-	with no FILE, or when FILE is -, read standard input
-
-	output can only be png or svg
-
-	define a collection of jobs in user config "$XDG_CONFIG_HOME/xico/xico.conf"
-
-	or specify alternative configuration file to use with "-c | --config FILE"
+	set bg-fill '#3311FF'
+	set text-font-size 64px
 
 
-OPTIONS
-	-i | --input       *<INPUT_CHAR>
-		 a single character. -i 'λ'
+Or alias _if available_
 
-	-o | --output      *<OUTPUT_FILE>
-		output image path. -o ~/pics/xyzzy/hoge.png
+	set bg '#3311FF'
+	set fs 10em
 
-	[-fg| --foreground  <HEX|NAME>]
-		the icon foreground color in '#RGB' or NAME -fg '#4411FF'
+Set commands can be repeated, every set will overwrite the previous value
 
-	[-bg| --background  <HEX|NAME>]
-		the icon background color in '#RGB' or NAME -bg '#AA22EE'
+##### Put command
 
-	[-fs| --font-size   <SIZE_PX|SIZE_EM>]
-		the font size in em or px -fs 32px
+`put <char> <destination>`
 
-	[-ff| --font-family <FONT_FAMILY>]
-		the font family used -ff NotoSans
+This will create an image from the `<char>` and place it `<destination>`
+with the current set options
 
-	[-fw| --font-weight <NORMAL|BOLD|BOLDER>]
-		the font weight -fw bold
+Put commands can be repeated, every put will use the options set to that point
 
-	[-s | --size        <SIZE_INT>]
-		the final image size -s 128 would result in a '128x128' pixel png
+##### Pre command
 
-	[-x | --x-pos       <POSITION_X>]
-		adjust the x position of the character to align further
+`pre <path>`
 
-	[-y | --y-pos       <POSITION_Y>]
-		adjust the y position of the character to justify further
+Any `put` afterwards will output with this prefix.
 
-	[-c | --config      <CONFIG_FILE>]
-		specify alternative configuration file to use
+eg.
+```sh
+# ...
+pre /tmp/foo/
 
-	[-r | --round]
-		flag to set the background shape rounded
+set bg red
+put テ hoge.png
 
-	[-h | --help]
-		show help menu
-[[-] <INPUT_CHAR>]
+set fg blue
+put た fuga.png
+
+# ──────────────────────────
+
+pre ~/.config/awesome/layout
+
+set bg ''
+set fg '#3311FF'
+
+pre ~/.config/awesome/layout/
+
+put 􁒠  tiletop.png
+put 􁒣  tileright.png
+put 􁒡  tilebottom.png
+put 􁒢  tileleft.png
+```
+
+Will output to
+
+	/tmp/foo/hoge.png
+	/tmp/foo/fuga.png
+
+Check [lib/sample.xc.conf](lib/sample.xc.conf) for more examples
+
+---
+
+	eg. xico -bg red -fg '#3311ff' 󰘧 hello.png
 
 
-.
-EXAMPLES
+The final positional arguments is required if no template is provided
+
+> [!NOTE]
+> All positioning options can be `<length>|<percentage>`
+>
+> eg. `bg-width 10px` or `bg-width 10%` or `bg-width 10`
+
+
+> [!NOTE]
+> Percentage unit and option with no unit identifier behave the same
+>
+> eg. `bg-width 10px` and `bg-width 10`
+
+> [!NOTE]
+> Font size option can be `<absolute-size>|<relative-size>|<length-percentage>`
+>
+> eg. `text-font-size 22px` or `fs 5em`
+
+> [!NOTE]
+> A rect with `radius` of `50` is circle!
+>
+> can be set with `radius` or `r`
+> or separately for each axis `bg-rx` & `bg-ry`
+>
+> eg. `radius 50` or `r 50` or ( `bg-rx 50` & `bg-ry 50` )
+
+
+> [!NOTE]
+> The output is always square
+>
+> Set the output size with `size` or its alias `s`
+> width and height would be set to that value
+>
+> eg. `size 700` or `s 700`
+
+> [!Important]
+> `size` is integer without any unit, _its always in `px`_
+
+> [!NOTE]
+> The text is always centered
+>
+> it can be adjusted with `text-x, text-y, text-dx, text,dy`
+
+> [!NOTE]
+> The output is always square
+>
+> a square starting from `(0,0)`
+> with width and height of `100`
+> and radius of `25`
+> can be adjusted with options
+
+> [!Caution]
+>	options with special character need quoting
+
+> [!NOTE]
+> Options can be used mixed together
+> as command-line options or in template
+
+> [!Important]
+> Options can be repeated
+> the final one takes precedence.
+
+---
+
+### EXAMPLES
 
 	# convert one character
-	xico -i 𝝺 -o lambda.png
+	xico 𝝺 lambda.png
 
-	# create png from character with rounded cover, custom fg and bg, font size and y position
-	xico -i 𝝺 -r -bg '#112233' -fg '#4411ff' -o ~/pics/x1.png -fs 7em -y 78
+	# create png from character with rounded cover, custom fg and bg, font size
+	xico -bg '#112233' -fg '#4411ff' -fs 4em 𝝺 ~/pics/x1.png
 
 	# create a new image from character with custom color, transparent background and default config
-	xico -fg '#AA1144' -i ✪ -o ~/pics/x2.png
+	xico -fg '#AA1144' ✪  ~/pics/x2.png
 
-	# process with alternative configuration file
-	# xico -c awesome-xico.conf
+	# process a template file
+	# xico -t awesome.xc.conf
 
+---
 
+### Custom Attributes
 
-CONFIGURATION
-	xico looks for the configuration file at the following paths
-		1. "$XDG_CONFIG_HOME/xico/xico.conf"
-		2. "$XDG_CONFIG_HOME/xico.conf"
-		3. "$HOME/.xico.conf"
+To add other attributes add an entry To add the `XC` associative array.
+Prefix `bg-` for `<rect>` element and `text-` for `<text>` element
 
-	simple key value options with at least one blank character (<Space> or <Tab>)
+Almost all [Presentation attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute#presentation_attributes) should work
 
-	this section documents the root level of the configuration file
+For `<rect>` element
+`[bg-<attribute>]=<default>`
 
-	# default size (mm)
-	size 	500
+For `<text>`
+`[text-<attribute>]=<default>`
 
-	# default bg (rgba|transparent)
-	bg 	transparent
+eg.
+```sh
+[text-stroke]='#0077EE'
+[text-stroke-width]=3
+[text-writing-mode]=vertical-lr
 
-	# default font (monospace)
-	font 	monospace
-
-	# define logical groups
-
-	# relative to working directory
-	⨷ 	./error.png
-	𝞵 	./foo/micro.png
-
-	# absolute path
-	᮷ 	~/dev/acme/assets/ico/head_1.png
-	᳅ 	~/dev/acme/assets/ico/head_2.png
-
-	# use env variables
-	𑣐 	/tmp/curve_${RANDOM}.png
-	𑣉 	${XDG_CONFIG_HOME}/xyzzy/curve.png
-
-	# the missing directories will be created
-	𐰁 	~/pics/fuga/edge_1.png
-	𐰒 	~/pics/fuga/edge_2.png
-
-	# set a base path for remaining items
-	base 	~/pics/widgets
-
-	# the example bellow will write to
-	# 	~/pics/widgets/char_a.png
-	# 	~/pics/widgets/char_e.png
-	# 	~/pics/widgets/char_f.png
-
-	𑢴 	char_a.png
-	𑢦 	char_e.png
-	𑢢 	char_f.png
-
-	# reset the base path
-	base 	~/.config/frob
-
-	# the example bellow will write to
-	# 	~/.config/frob/hoge.png
-	# 	~/.config/frob/state/nyoro.png
-
-	た 	hoge.png
-	テ 	state/nyoro.png
-
-
-ENVIRONMENT.VARIABLES
-	XICO_SILENT    | less verbose
-	XICO_DEBUG     | debug mode
-
-
-SEE.ALSO
-	inkscape(1)
-
-
-AUTHOR
-	metaory <metaory@gmail.com>, Apr 2024
+[bg-stroke-width]=2
+[bg-stroke-linejoin]=round
+[bg-stroke-miterlimit]=214
 ```
+
+### The SVG template
+
+Is a simple SVG file placed in [lib/xico.svg] can easily be extended.
 
 ---
 
@@ -217,9 +323,12 @@ cd xico
 chmod +x xico
 
 # Link it somewhere in your PATH
-ln -sfv xico /usr/bin/xico
+ln -svf $PWD/xico /usr/bin/xico
 
 # Use it anywhere
+xico 𐰒 zig.png
+
+xico -bg '#112222'-fg '#AA11FF' --radius 50 𝝺 lambda.png
 
 # Usage
 xico --help
@@ -227,14 +336,39 @@ xico --help
 
 TODO
 ====
-- [ ] Makefile
+- [ ] Dynamic readme usage
+- [ ] Dynamic cli usage
+- [X] Dynamic attributes
+- [X] Template
 - [x] Attributes; bg, fg, font, size
 - [ ] Fallback engines for Inkscape, Cairo, Convert, ...
+- [ ] Handle env settings
+- [ ] Handle stdin
+- [ ] Makefile
 
 ---
 
+
+## ENVIRONMENT VARIABLES
+
+	# XICO_SILENT    | less verbose
+	# XICO_DEBUG     | debug mode
+
+
+## SEE ALSO
+	inkscape(1)
+
+
+## AUTHOR
+	metaory <metaory@gmail.com>, Apr 2024
+
+---
+
+
 	▀▄▀ █ █▀▀ █▀█
 	█░█ █ █▄▄ █▄█
+	▁▁▁▁▁▁▁▁v0.4▁
+
 
 ---
 

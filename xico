@@ -10,138 +10,167 @@ set -o noclobber
 #
 #   ▀  DECLARATIONS
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-XICO_BASE="$(dirname "$(realpath "$0")")"
-declare -r XICO_CONFIG="${XDG_HOME:-${HOME}/.config}/xico/xico.conf"
-declare -r XICO_CACHE="/tmp/xico"
-declare -r SYNOPSIS='xico
-     -i | --input       <INPUT_CHAR>
-     -o | --output      <OUTPUT_FILE>
-    [-fg| --foreground  <HEX|NAME>]
-    [-bg| --background  <HEX|NAME>]
-    [-fs| --font-size   <SIZE_PX|SIZE_EM>]
-    [-ff| --font-family <FONT_FAMILY>]
-    [-fw| --font-weight <NORMAL|BOLD|BOLDER>]
-    [-s | --size        <SIZE_INT>]
-    [-x | --x-pos       <POSITION_X>]
-    [-y | --y-pos       <POSITION_Y>]
-    [-c | --config      <CONFIG_FILE>]
-    [-r | --round]
-    [-h | --help]
-  [[-] <INPUT_CHAR>]'
-declare -A STATE=(
-    [fontfamily]=monospace
-    [fontweight]=bold
-    [fontsize]=90px
-    [x]=50
-    [y]=80
-    [fg]='#3311ff'
-    [geo]=500
-)
+XC_BASE="$(dirname "$(realpath "$0")")"
 
-#
-#   ▀  SOURCES
-# ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-# shellcheck source=/dev/null
-source "$XICO_BASE"/src/xico.debug.sh
-xico_debug "${!XICO_@}"
+# TODO: jit
+declare -r SYNOPSIS='	xico [OPTION]... FILE'
+
+#######################
+
+declare -A XC=(
+    [bg-fill]="black"
+    [bg-width]="100"
+    [bg-height]="100"
+    [bg-opacity]="0.0"
+    [bg-rx]="25"
+    [bg-ry]="25"
+    [bg-x]="0"
+    [bg-y]="0"
+    [text-fill]="#3311FF"
+    [text-font-family]="monospace"
+    [text-font-weight]="bold"
+    [text-font-size]="8em"
+    [text-dx]="0"
+    [text-dy]="0"
+    [text-x]="50"
+    [text-y]="50"
+    [size]="500"
+    [delay]="3"
+)
+declare -A XC_ALIAS=(
+    [bg]=bg-fill
+    [fg]=text-fill
+    [fs]=text-font-size
+    [fw]=text-font-weight
+    [ff]=text-font-family
+    [w]=bg-width
+    [h]=bg-height
+    [r]=radius
+    [d]=delay
+    [s]=size
+)
+declare -a XC_OPTS
+mapfile -t XC_OPTS < <(printf '%s\n' "${!XC[@]}" | sort)
 
 #
 #   ▀  DEFINITIONS
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-function xico_echo { printf "\e[3${1}m%s\e[0m\n" "${*:2}"; }
-function xico_fail { xico_echo 1 "[ERROR] $*"; exit 1; }
-function xico_help { xico_echo 4 "$SYNOPSIS"; }
-function xico_trap { (($?)) && xico_help; }
-function xico_make {
-    local bo=0
-    local co=0
-    local t="${XICO_CACHE}/${RANDOM}.svg"
-
-    [ -n "${STATE[bg]}" ] && bo=1
-
-    (( STATE[round] )) && co=1 && bo=0
-
-    [ "${STATE[out]%/*}" != "${STATE[out]}" ] && mkdir -p "${STATE[out]%/*}" 2>/dev/null
-
-    sed \
-        -e "s/__XICO_IC__/${STATE[chr]}/g" \
-        -e "s/__XICO_FG__/${STATE[fg]}/g" \
-        -e "s/__XICO_BG__/${STATE[bg]}/g" \
-        -e "s/__XICO_BO__/${bo}/g" \
-        -e "s/__XICO_CO__/${co}/g" \
-        -e "s/__XICO_X__/${STATE[x]}/g" \
-        -e "s/__XICO_Y__/${STATE[y]}/g" \
-        -e "s/__XICO_FONT_SIZE__/${STATE[fontsize]}/g" \
-        -e "s/__XICO_FONT_FAMILY__/${STATE[fontfamily]}/g" \
-        -e "s/__XICO_FONT_WEIGHT__/${STATE[fontweight]}/g" \
-        "${XICO_BASE}/src/xico.svg" >"$t"
-
-    inkscape -w "${STATE[geo]}" -h "${STATE[geo]}" \
-        "$t" --export-type png -o "${STATE[out]}"
+declare C0='\e[0m'; for i in {1..9}; do declare "C${i}"="\e[1;3${i}m"; done
+function xc_echo {
+    local c
+    local v
+    while [ "$1" ]; do
+        v="$1"
+        c="$C5"
+        [[ "$v" =~ ^[0-9]{1}: ]] && {
+            c="C${v::1}"
+            c="${!c}"
+            v="${v:2}"
+        }
+        printf "${c}%s " "$v"
+        shift
+    done
+    echo -e "$C0"
 }
+function xc_fail { printf "\e[31m [ERROR] %s \e[33m%s\e[0m\n" "$1" "${*:2}"; exit; }
+function xc_help { xc_echo  "4:$SYNOPSIS"; exit; }
+function xc_trap { (($?)) && xc_echo 3:$'\n xico --help'; }
+function xc_scan {
+    for k in "${XC_OPTS[@]}"; do
+        printf "${C4}%18s ${C2}%s${C0}\n" "$k" "${XC[$k]}"
+    done
+}
+function xc_pick {
+    local k="${XC_ALIAS[$1]:-$1}"
+    local v="${2:?BAD_VAL}"
+    if [ "$k" = "radius" ]; then XC[bg-rx]="$v"; XC[bg-ry]="$v"; return; fi
+    [ "${XC_OPTS[*]}" == "${XC_OPTS[*]/${k}/}" ] && xc_fail BAD_OPTION "$k"
+    XC["$k"]="$v"
+    xc_echo " ::" "3:set" "$k" "$v"
+}
+function xc_make {
+    t="/tmp/xico/$(date +%s).svg"
+    i="${1:?BAD_INPUT}"
+    o="${2:?BAD_OUTPUT}"
+    s="${XC[size]}"
+    cp "${XC_BASE}/lib/xico.svg" "$t"
 
-function xico_conf {
-    [ -e "${STATE[cfg]}" ] || xico_fail TPL_NOT_FOUND
-    cat "${STATE[cfg]}" - <<<"in 10s"
-    sleep 10
-    local b
-    while read -r L; do
-        k="${L%% *}"
-        v="${L##* }"
-        [ "$k" == 'base' ] && b="$v" && continue
-        xico_make "$k" "${b}/${v}"
-    done < <(sed -E -f "${STATE[sed]}" <"${STATE[cfg]}")
+    XC[input]="$i"
+
+    xc_echo "3:$i" "≫" "2:$o"
+    sleep 5
+    xc_scan
+
+    for k in "${!XC[@]}"; do
+        printf "\e[35m%18s \e[33m%s\e[0m\n" "$k" "${XC[$k]}"
+        sed -i -e "s/__${k}__/${XC[${k}]}/g" "$t"
+    done
+
+    xc_echo "4:temporary svg is ready" "2:${t}"
+    xc_echo "6:creating" "3:${o}" $'\n'
+    sleep "${XC[delay]}"
+
+    inkscape -w "$s" -h "$s" \
+        "$t" \
+        --export-type png \
+        -o "$o" 2>/dev/null
+
+    xc_echo "2:successfully created" "3:${s}x${s}" in "2:${o}" $'\n'
+    sleep "${XC[delay]}"
 }
 
 #
 #   ▀  ERROR TRAPS
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-trap xico_trap EXIT
-[ -d "$XICO_CACHE" ] || mkdir "$XICO_CACHE" 2>/dev/null || true
-[ -e "$XICO_CONFIG" ] || {
-    mkdir -p "$(dirname "$XICO_CONFIG")"
-    cp "${BASE}/src/xico.conf" "$XICO_CONFIG"
+trap xc_trap EXIT
+mkdir /tmp/xico &>/dev/null || :
+
+#   ▀  TEMPLATE
+# ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+function xc_load {
+    local pre=''
+    while read -r L; do
+        read -r act opt val < <(awk '{print $1,$2,$3}' <<< "$L")
+        if [ "$act" = "set" ]; then
+            xc_pick "$opt" "$val"
+        fi
+        if [ "$act" = "put" ]; then
+            val="${pre}${val}"
+            xc_make "$opt" "$val"
+        fi
+        if [ "$act" = "pre" ]; then
+            xc_echo $' ... ' '7:prefix updated' "3:${opt}"
+            pre="$opt"
+        fi
+    done < <(sed -E '/^$|^[#]/d' <"${1}")
+    exit
 }
 
-#
 #   ▀  MAIN
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do
     case $1 in
-        -i  | --input       ) shift; STATE[chr]="$1";        ;;
-        -o  | --output      ) shift; STATE[out]="$1";        ;;
-        -fg | --foreground  ) shift; STATE[fg]="$1";         ;;
-        -bg | --background  ) shift; STATE[bg]="$1";         ;;
-        -fs | --font-size   ) shift; STATE[fontsize]="$1";   ;;
-        -ff | --font-family ) shift; STATE[fontfamily]="$1"; ;;
-        -fw | --font-weight ) shift; STATE[fontweight]="$1"; ;;
-        -s  | --size        ) shift; STATE[geo]="${1}";      ;;
-        -x  | --x-pos       ) shift; STATE[x]="$1";          ;;
-        -y  | --y-pos       ) shift; STATE[y]="$1";          ;;
-        -c  | --config      ) shift; STATE[cfg]="$1";        ;;
-        -r  | --round       )        STATE[round]=1;         ;;
-        -h  | --help        ) xico_help; exit;               ;;
+        -t | --template) template="$2"; shift ;;
+        -h | --help)     xc_help ;;
+        --no-delay)      XC[delay]=0; ;;
+        --*)             xc_pick "${1:2}" "$2"; shift ;;
+        -*)              xc_pick "${1:1}" "$2"; shift ;;
     esac
     shift
 done
 
+[ -f "$template" ] && xc_load "$template"
 
+[ -n "$2" ] && xc_make "$1" "$2"
 
-[ ! -t 0 ] && { read -r x; STATE[chr]="$x"; }
-
-xico_debug "${!STATE[@]}"
-
-[ "${STATE[chr]}" = "" ] || [ "${STATE[out]}" = "" ] && xico_fail '-i and -o are required'
-
-xico_make
-
-# TODO: xico_conf
+# TODO: handle stdin
+# [ ! -t 0 ] && { read -r x; STATE[chr]="$x"; }
 
 #
 #
 #  ▀▄▀ █ █▀▀ █▀█
 #  █░█ █ █▄▄ █▄█
-#  ▁▁▁▁▁▁▁▁v0.2▁
+#  ▁▁▁▁▁▁▁▁v0.4▁
 #
 #
 
