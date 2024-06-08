@@ -7,7 +7,6 @@ set -o errtrace
 set -o pipefail
 set -o noclobber
 
-#
 #   ▀  DECLARATIONS
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 XC_BASE="$(dirname "$(realpath "$0")")"
@@ -21,7 +20,7 @@ declare -A XC=(
     [bg-fill]="black"
     [bg-width]="100"
     [bg-height]="100"
-    [bg-opacity]="0.0"
+    [bg-opacity]="0.5"
     [bg-rx]="25"
     [bg-ry]="25"
     [bg-x]="0"
@@ -38,11 +37,15 @@ declare -A XC=(
     [delay]="3"
 )
 declare -A XC_ALIAS=(
+    [opacity]=bg-opacity
     [bg]=bg-fill
     [fg]=text-fill
-    [fs]=text-font-size
     [fw]=text-font-weight
     [ff]=text-font-family
+    [fs]=text-font-size
+    [x]=text-x
+    [y]=text-y
+    [o]=bg-opacity
     [w]=bg-width
     [h]=bg-height
     [r]=radius
@@ -98,9 +101,10 @@ function xc_make {
     XC[input]="$i"
 
     xc_echo "3:$i" "≫" "2:$o"
-    sleep 5
+    sleep "${XC[delay]}"
     xc_scan
 
+    # exit
     for k in "${!XC[@]}"; do
         printf "\e[35m%18s \e[33m%s\e[0m\n" "$k" "${XC[$k]}"
         sed -i -e "s/__${k}__/${XC[${k}]}/g" "$t"
@@ -140,9 +144,9 @@ function xc_load {
         fi
         if [ "$act" = "pre" ]; then
             xc_echo $' ... ' '7:prefix updated' "3:${opt}"
-            pre="$opt"
+            pre="${opt%/}"
         fi
-    done < <(sed -E '/^$|^[#]/d' <"${1}")
+    done < <(sed -E '/^$|^[#]/d' < "${1}")
     exit
 }
 

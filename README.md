@@ -1,34 +1,31 @@
-XICO
-====
+<div align="center">
+  <h1>X̶̶I̶̶C̶̶O</h1>
+  <img src=".github/assets/xico.png" width="168px"/>
+  <h4>simple cli to make png images from ascii characters</h4>
+</div>
 
-### simple cli to make png images from ascii characters
+<div align="center">
+  <img src=".github/assets/x01.png" width="96" />
+  <img src=".github/assets/x02.png" width="96" />
+  <img src=".github/assets/x03.png" width="96" />
+  <img src=".github/assets/x04.png" width="96" />
+  <img src=".github/assets/x05.png" width="96" />
+  <img src=".github/assets/x06.png" width="96" />
+  <img src=".github/assets/x07.png" width="96" />
+  <img src=".github/assets/x08.png" width="96" />
+  <img src=".github/assets/x09.png" width="96" />
+  <img src=".github/assets/x10.png" width="96" />
+  <img src=".github/assets/x11.png" width="96" />
+  <img src=".github/assets/x12.png" width="96" />
+  <img src=".github/assets/x13.png" width="96" />
+  <img src=".github/assets/x14.png" width="96" />
+  <img src=".github/assets/x15.png" width="96" />
+  <img src=".github/assets/x16.png" width="96" />
+  <img src=".github/assets/x17.png" width="96" />
+  <img src=".github/assets/x18.png" width="96" />
+</div>
 
-<p align="middle">
-  <img src=".github/assets/xico.png" />
-</p>
-
-<p align="middle">
-  <img src=".github/assets/x01.png" width="100" />
-  <img src=".github/assets/x02.png" width="100" />
-  <img src=".github/assets/x03.png" width="100" />
-  <img src=".github/assets/x04.png" width="100" />
-  <img src=".github/assets/x05.png" width="100" />
-  <img src=".github/assets/x06.png" width="100" />
-  <img src=".github/assets/x07.png" width="100" />
-  <img src=".github/assets/x08.png" width="100" />
-  <img src=".github/assets/x09.png" width="100" />
-  <img src=".github/assets/x10.png" width="100" />
-  <img src=".github/assets/x11.png" width="100" />
-  <img src=".github/assets/x12.png" width="100" />
-  <img src=".github/assets/x13.png" width="100" />
-  <img src=".github/assets/x14.png" width="100" />
-  <img src=".github/assets/x15.png" width="100" />
-  <img src=".github/assets/x16.png" width="100" />
-  <img src=".github/assets/x17.png" width="100" />
-  <img src=".github/assets/x18.png" width="100" />
-</p>
-
-░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+---
 
 ## DESCRIPTION
 
@@ -40,9 +37,9 @@ It creates `png` images from the `svg`
 
 The `svg` contains only 2 elements
 - `<rect>` [SVG/Element/rect](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect)
-- `<text>`  [SVG/Element/text](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text)
+- `<text>` [SVG/Element/text](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text)
 
-Most of their attributes [rect attr](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect#attributes) [text attr](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text#attributes) are added.
+Most of their attributes [rect attr](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect#attributes) and [text attr](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text#attributes) are added.
 
 Check [Custom Attributes](#custom-attributes) section for adding custom attributes.
 
@@ -57,36 +54,42 @@ Check [Custom Attributes](#custom-attributes) section for adding custom attribut
 
 These options are only available on CLI
 
-| cli options      | alias  |
-| ---------------- | ------ |
-| --template       | -t     |
-| --help           | -h     |
-| --no-delay       |        |
+| cli option  | alias |
+| ----------- | ----- |
+| --template  | -t    |
+| --help      | -h    |
+| --no-delay  |       |
 
 ### Options
 
 These options are available in template and CLI
 
-| options          | alias  | default    |
-| ---------------- | ------ | ---------- |
-| bg-fill          | bg     |  black     |
-| bg-width         | w      |  100       |
-| bg-height        | h      |  100       |
-| bg-opacity       |        |  1         |
-| bg-rx            | r      |  25        |
-| bg-ry            | r      |  25        |
-| bg-x             |        |  0         |
-| bg-y             |        |  0         |
-| text-fill        | fg     |  #3311FF   |
-| text-font-family | ff     |  monospace |
-| text-font-weight | fw     |  bold      |
-| text-font-size   | fs     |  8em       |
-| text-dx          |        |  0         |
-| text-dy          |        |  0         |
-| text-x           |        |  50        |
-| text-y           |        |  50        |
-| size             | s      |  500       |
-| delay            | d      |  3         |
+| rect options | alias | default |
+| ------------ | ----- | ------- |
+| rect-fill    | bg    | black   |
+| rect-width   | w     | 100     |
+| rect-height  | h     | 100     |
+| rect-opacity | o     | 0.5     |
+| rect-rx      | r     | 25      |
+| rect-ry      | r     | 25      |
+| rect-x       |       | 0       |
+| rect-y       |       | 0       |
+
+| text options     | alias | default   |
+| ---------------- | ----- | --------- |
+| text-fill        | fg    | #3311FF   |
+| text-font-family | ff    | monospace |
+| text-font-weight | fw    | bold      |
+| text-font-size   | fs    | 8em       |
+| text-dx          |       | 0         |
+| text-dy          |       | 0         |
+| text-x           | x     | 50        |
+| text-y           | y     | 50        |
+
+| cli options | alias | default |
+| ----------- | ----- | ------- |
+| size        | s     | 500     |
+| delay       | d     | 3       |
 
 #### CLI Usage
 
@@ -100,7 +103,7 @@ These options are available in template and CLI
 
 eg.
 
-	xico --bg-fill '#3300FF'
+	xico --rect-fill '#3300FF'
 
 Or alias if available
 
@@ -123,7 +126,7 @@ This will set or update the option
 
 	# foo.xc.conf
 
-	set bg-fill '#3311FF'
+	set rect-fill '#3311FF'
 	set text-font-size 64px
 
 
@@ -169,10 +172,10 @@ set fg '#3311FF'
 
 pre ~/.config/awesome/layout/
 
-put 􁒠  tiletop.png
-put 􁒣  tileright.png
-put 􁒡  tilebottom.png
-put 􁒢  tileleft.png
+put ⬒  tiletop.png
+put ◨  tileright.png
+put ⬓  tilebottom.png
+put ◧  tileleft.png
 ```
 
 Will output to
@@ -192,13 +195,13 @@ The final positional arguments is required if no template is provided
 > [!NOTE]
 > All positioning options can be `<length>|<percentage>`
 >
-> eg. `bg-width 10px` or `bg-width 10%` or `bg-width 10`
+> eg. `rect-width 10px` or `rect-width 10%` or `rect-width 10`
 
 
 > [!NOTE]
 > Percentage unit and option with no unit identifier behave the same
 >
-> eg. `bg-width 10px` and `bg-width 10`
+> eg. `rect-width 10px` and `rect-width 10`
 
 > [!NOTE]
 > Font size option can be `<absolute-size>|<relative-size>|<length-percentage>`
@@ -209,9 +212,9 @@ The final positional arguments is required if no template is provided
 > A rect with `radius` of `50` is circle!
 >
 > can be set with `radius` or `r`
-> or separately for each axis `bg-rx` & `bg-ry`
+> or separately for each axis `rect-rx` & `rect-ry`
 >
-> eg. `radius 50` or `r 50` or ( `bg-rx 50` & `bg-ry 50` )
+> eg. `radius 50` or `r 50` or ( `rect-rx 50` & `rect-ry 50` )
 
 
 > [!NOTE]
@@ -270,12 +273,12 @@ The final positional arguments is required if no template is provided
 ### Custom Attributes
 
 To add other attributes add an entry To add the `XC` associative array.
-Prefix `bg-` for `<rect>` element and `text-` for `<text>` element
+Prefix `rect-` for `<rect>` element and `text-` for `<text>` element
 
 Almost all [Presentation attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute#presentation_attributes) should work
 
 For `<rect>` element
-`[bg-<attribute>]=<default>`
+`[rect-<attribute>]=<default>`
 
 For `<text>`
 `[text-<attribute>]=<default>`
@@ -286,9 +289,9 @@ eg.
 [text-stroke-width]=3
 [text-writing-mode]=vertical-lr
 
-[bg-stroke-width]=2
-[bg-stroke-linejoin]=round
-[bg-stroke-miterlimit]=214
+[rect-stroke-width]=2
+[rect-stroke-linejoin]=round
+[rect-stroke-miterlimit]=214
 ```
 
 ### The SVG template
@@ -341,7 +344,13 @@ TODO
 - [X] Dynamic attributes
 - [X] Template
 - [x] Attributes; bg, fg, font, size
-- [ ] Fallback engines for Inkscape, Cairo, Convert, ...
+
+##### Fallback rendering engines
+
+- [ ] [ImageMagick](https://www.imagemagick.org) _cairo_
+- [ ] [libvips](https://github.com/libvips/libvips) _cairo_
+- [ ] [librsvg](https://wiki.gnome.org/projects/librsvg) _cairo_
+
 - [ ] Handle env settings
 - [ ] Handle stdin
 - [ ] Makefile
