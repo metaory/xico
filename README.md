@@ -286,7 +286,7 @@ eg.
 
 ### The SVG template
 
-Is a simple SVG file placed in [lib/xico.svg] can easily be extended.
+Is a simple SVG file placed in [lib/xico.svg](lib/xico.svg) can easily be extended.
 
 ---
 
