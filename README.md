@@ -54,42 +54,49 @@ Check [Custom Attributes](#custom-attributes) section for adding custom attribut
 
 These options are only available on CLI
 
-| cli option  | alias |
-| ----------- | ----- |
-| --template  | -t    |
-| --help      | -h    |
-| --no-delay  |       |
+
+| cli option | alias | default |
+| ---------- | ----- | ------- |
+| --delay    | -d    | 3       |
+| --help     | -h    |         |
+| --no-delay |       |         |
+| --size     | -s    | 500     |
+| --template | -t    |         |
 
 ### Options
 
 These options are available in template and CLI
 
-| rect options | alias | default |
+| option   | alias | default |
+| -------- | ----- | ------- |
+| delay    | d     | 3       |
+| size     | s     | 500     |
+
+| rect option  | alias | default |
 | ------------ | ----- | ------- |
-| rect-fill    | bg    | black   |
-| rect-width   | w     | 100     |
-| rect-height  | h     | 100     |
-| rect-opacity | o     | 0.5     |
-| rect-rx      | r     | 25      |
-| rect-ry      | r     | 25      |
-| rect-x       |       | 0       |
-| rect-y       |       | 0       |
+| r_fill       | bg    | black   |
+| r_width      | w     | 100     |
+| r_height     | h     | 100     |
+| r_opacity    | o     | 0.5     |
+| r_rx         | r     | 25      |
+| r_ry         | r     | 25      |
+| r_x          |       | 0       |
+| r_y          |       | 0       |
 
-| text options     | alias | default   |
-| ---------------- | ----- | --------- |
-| text-fill        | fg    | #3311FF   |
-| text-font-family | ff    | monospace |
-| text-font-weight | fw    | bold      |
-| text-font-size   | fs    | 8em       |
-| text-dx          |       | 0         |
-| text-dy          |       | 0         |
-| text-x           | x     | 50        |
-| text-y           | y     | 50        |
+| text option        | alias  | default   |
+| ------------------ | ------ | --------- |
+| t_fill             | fg     | #3311FF   |
+| t_font-family      | ff     | monospace |
+| t_font-weight      | fw     | bold      |
+| t_font-size        | fs     | 8em       |
+| t_rotate           |        | 0         |
+| t_transform        |        |           |
+| t_transform-origin |        |           |
+| t_dx               |        | 0         |
+| t_dy               |        | 4         |
+| t_x                | x      | 50        |
+| t_y                | y      | 50        |
 
-| cli options | alias | default |
-| ----------- | ----- | ------- |
-| size        | s     | 500     |
-| delay       | d     | 3       |
 
 #### CLI Usage
 
@@ -103,17 +110,20 @@ These options are available in template and CLI
 
 eg.
 
-	xico --rect-fill '#3300FF'
+	xico --r_fill '#3300FF' λ
 
 Or alias if available
 
-	xico -bg '#3300FF'
+	xico -bg '#3300FF' ᮿ
 
 #### Template Usage
 
-All options or their alias can be set in a _xico template_ `*.xc.conf`
+All options or their alias can be set in a xico template
 
 `set`, `put` and `pre` are the only commands
+
+> [!NOTE]
+> `template` file **name** or **extension** can be anything
 
 ##### Set command
 
@@ -124,7 +134,7 @@ This will set or update the option
 `set` commands can be repeated, the latest would take precedence.
 
 
-	# foo.xc.conf
+	# foo.tpl
 
 	set rect-fill '#3311FF'
 	set text-font-size 64px
@@ -153,9 +163,10 @@ Put commands can be repeated, every put will use the options set to that point
 Any `put` afterwards will output with this prefix.
 
 eg.
+
 ```sh
 # ...
-pre /tmp/foo/
+pre /tmp/foo
 
 set bg red
 put テ hoge.png
@@ -163,67 +174,47 @@ put テ hoge.png
 set fg blue
 put た fuga.png
 
-# ──────────────────────────
+# will create
+#	/tmp/foo/hoge.png
+#	/tmp/foo/fuga.png
 
-pre ~/.config/awesome/layout
+pre $HOME/.config/awesome/layout/
 
-set bg ''
-set fg '#3311FF'
-
-pre ~/.config/awesome/layout/
+set fg #3311FF
 
 put ⬒  tiletop.png
 put ◨  tileright.png
+
+set fg #AA44FF
+
 put ⬓  tilebottom.png
 put ◧  tileleft.png
 ```
 
-Will output to
-
-	/tmp/foo/hoge.png
-	/tmp/foo/fuga.png
-
-Check [lib/sample.xc.conf](lib/sample.xc.conf) for more examples
-
----
-
 	eg. xico -bg red -fg '#3311ff' 󰘧 hello.png
 
 
-The final positional arguments is required if no template is provided
+#### 💡 Check complete template [templates/default.tpl](templates/default.tpl)
 
-> [!NOTE]
-> All positioning options can be `<length>|<percentage>`
->
-> eg. `rect-width 10px` or `rect-width 10%` or `rect-width 10`
+#### 🐣 Check starter template [templates/starter.tpl](templates/starter.tpl)
 
+```
+cp templates/starter.tpl <path>
+xico -t <path>
+```
 
-> [!NOTE]
-> Percentage unit and option with no unit identifier behave the same
->
-> eg. `rect-width 10px` and `rect-width 10`
+---
 
-> [!NOTE]
-> Font size option can be `<absolute-size>|<relative-size>|<length-percentage>`
->
-> eg. `text-font-size 22px` or `fs 5em`
-
-> [!NOTE]
-> A rect with `radius` of `50` is circle!
->
-> can be set with `radius` or `r`
-> or separately for each axis `rect-rx` & `rect-ry`
->
-> eg. `radius 50` or `r 50` or ( `rect-rx 50` & `rect-ry 50` )
-
+> [!Caution]
+> The final positional arguments is required if no template is provided
 
 > [!NOTE]
 > The output is always square
 >
 > Set the output size with `size` or its alias `s`
-> width and height would be set to that value
 >
 > eg. `size 700` or `s 700`
+> would be a square 700x700px png
 
 > [!Important]
 > `size` is integer without any unit, _its always in `px`_
@@ -231,18 +222,19 @@ The final positional arguments is required if no template is provided
 > [!NOTE]
 > The text is always centered
 >
-> it can be adjusted with `text-x, text-y, text-dx, text,dy`
+> it can be adjusted with `t_x, t_y, t_dx, t-dy`
 
 > [!NOTE]
-> The output is always square
+> The output is always full square on `(0,0)`
+
+> [!NOTE]
+> the background <rect> default radius is `25`
 >
-> a square starting from `(0,0)`
-> with width and height of `100`
-> and radius of `25`
-> can be adjusted with options
+> set radius to `50` for a **perfect circle**
+> you can set radius with `r` or `r_rx` and `r_ry`
 
 > [!Caution]
->	options with special character need quoting
+> options with special character need quoting
 
 > [!NOTE]
 > Options can be used mixed together
@@ -266,7 +258,7 @@ The final positional arguments is required if no template is provided
 	xico -fg '#AA1144' ✪  ~/pics/x2.png
 
 	# process a template file
-	# xico -t awesome.xc.conf
+	# xico -t awesome-xico.tpl
 
 ---
 
@@ -331,7 +323,7 @@ ln -svf $PWD/xico /usr/bin/xico
 # Use it anywhere
 xico 𐰒 zig.png
 
-xico -bg '#112222'-fg '#AA11FF' --radius 50 𝝺 lambda.png
+xico -bg '#112222'-fg '#AA11FF' -r 50 𝝺 lambda.png
 
 # Usage
 xico --help
@@ -347,9 +339,9 @@ TODO
 
 ##### Fallback rendering engines
 
-- [ ] [ImageMagick](https://www.imagemagick.org) _cairo_
-- [ ] [libvips](https://github.com/libvips/libvips) _cairo_
-- [ ] [librsvg](https://wiki.gnome.org/projects/librsvg) _cairo_
+- [.] [ImageMagick](https://www.imagemagick.org) _cairo_
+- [.] [libvips](https://github.com/libvips/libvips) _cairo_
+- [.] [librsvg](https://wiki.gnome.org/projects/librsvg) _cairo_
 
 - [ ] Handle env settings
 - [ ] Handle stdin
@@ -376,7 +368,7 @@ TODO
 
 	▀▄▀ █ █▀▀ █▀█
 	█░█ █ █▄▄ █▄█
-	▁▁▁▁▁▁▁▁v0.4▁
+	▁▁▁▁▁▁▁▁v0.5▁
 
 
 ---

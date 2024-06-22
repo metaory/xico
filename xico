@@ -13,41 +13,49 @@ XC_BASE="$(dirname "$(realpath "$0")")"
 
 # TODO: jit
 declare -r SYNOPSIS='	xico [OPTION]... FILE'
-
-#######################
+declare -A ENGINES=([inkscape]='Inkscape') # [magick]='ImageMagick' [rsvg-convert]='librsvg'
+declare -A ENGINE_URLS=(
+    [inkscape]='https://archlinux.org/packages/extra/x86_64/inkscape'
+    [magick]='https://archlinux.org/packages/extra/x86_64/imagemagick'
+    [rsvg-convert]='https://archlinux.org/packages/extra/x86_64/librsvg'
+)
+declare ENGINE
 
 declare -A XC=(
-    [bg-fill]="black"
-    [bg-width]="100"
-    [bg-height]="100"
-    [bg-opacity]="0.5"
-    [bg-rx]="25"
-    [bg-ry]="25"
-    [bg-x]="0"
-    [bg-y]="0"
-    [text-fill]="#3311FF"
-    [text-font-family]="monospace"
-    [text-font-weight]="bold"
-    [text-font-size]="8em"
-    [text-dx]="0"
-    [text-dy]="0"
-    [text-x]="50"
-    [text-y]="50"
+    [r_fill]="black"
+    [r_width]="100"
+    [r_height]="100"
+    [r_opacity]="0.5"
+    [r_rx]="25"
+    [r_ry]="25"
+    [r_x]="0"
+    [r_y]="0"
+    [t_fill]="#3311FF"
+    [t_font-family]="monospace"
+    [t_font-weight]="bold"
+    [t_font-size]="8em"
+    [t_rotate]="0"
+    [t_transform]="none"
+    [t_transform-origin]="0, 0"
+    [t_dx]="0"
+    [t_dy]="4"
+    [t_x]="50"
+    [t_y]="50"
     [size]="500"
     [delay]="3"
 )
 declare -A XC_ALIAS=(
-    [opacity]=bg-opacity
-    [bg]=bg-fill
-    [fg]=text-fill
-    [fw]=text-font-weight
-    [ff]=text-font-family
-    [fs]=text-font-size
-    [x]=text-x
-    [y]=text-y
-    [o]=bg-opacity
-    [w]=bg-width
-    [h]=bg-height
+    [opacity]=r_opacity
+    [bg]=r_fill
+    [fg]=t_fill
+    [fw]=t_font-weight
+    [ff]=t_font-family
+    [fs]=t_font-size
+    [x]=t_x
+    [y]=t_y
+    [o]=r_opacity
+    [w]=r_width
+    [h]=r_height
     [r]=radius
     [d]=delay
     [s]=size
@@ -58,66 +66,91 @@ mapfile -t XC_OPTS < <(printf '%s\n' "${!XC[@]}" | sort)
 #
 #   ▀  DEFINITIONS
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-declare C0='\e[0m'; for i in {1..9}; do declare "C${i}"="\e[1;3${i}m"; done
 function xc_echo {
-    local c
     local v
     while [ "$1" ]; do
         v="$1"
-        c="$C5"
         [[ "$v" =~ ^[0-9]{1}: ]] && {
-            c="C${v::1}"
-            c="${!c}"
+            echo -e -n "\e[3${v::1}m"
             v="${v:2}"
         }
-        printf "${c}%s " "$v"
+        printf '%s ' "$v"
         shift
     done
-    echo -e "$C0"
+    echo -e '\e[0m'
 }
-function xc_fail { printf "\e[31m [ERROR] %s \e[33m%s\e[0m\n" "$1" "${*:2}"; exit; }
-function xc_help { xc_echo  "4:$SYNOPSIS"; exit; }
+function xc_fail {
+    xc_echo $'\n' "1:[ERROR]:" "3:${1}" "${@:2}"
+    exit
+}
+function xc_help {
+    xc_echo "4:$SYNOPSIS"
+    exit
+}
 function xc_trap { (($?)) && xc_echo 3:$'\n xico --help'; }
 function xc_scan {
     for k in "${XC_OPTS[@]}"; do
-        printf "${C4}%18s ${C2}%s${C0}\n" "$k" "${XC[$k]}"
+        printf "\e[34m%18s \e[32m%s\e[0m\n" "$k" "${XC[$k]}"
     done
 }
 function xc_pick {
     local k="${XC_ALIAS[$1]:-$1}"
     local v="${2:?BAD_VAL}"
-    if [ "$k" = "radius" ]; then XC[bg-rx]="$v"; XC[bg-ry]="$v"; return; fi
+    v="$(envsubst <<<"$v")"
+    if [ "$k" = "radius" ]; then
+        XC[r_rx]="$v"
+        XC[r_ry]="$v"
+        return
+    fi
     [ "${XC_OPTS[*]}" == "${XC_OPTS[*]/${k}/}" ] && xc_fail BAD_OPTION "$k"
     XC["$k"]="$v"
     xc_echo " ::" "3:set" "$k" "$v"
 }
+function xc_inkscape {
+    local i="${1:?NO_IN}"
+    local o="${2:?NO_OUT}"
+    local s="${3:?NO_SIZE}"
+    inkscape -w "$s" -h "$s" \
+        "$i" \
+        --export-type png \
+        -o "$o"
+}
 function xc_make {
-    t="/tmp/xico/$(date +%s).svg"
     i="${1:?BAD_INPUT}"
     o="${2:?BAD_OUTPUT}"
+    d=$(dirname "$o")
+    b=$(basename "$o")
+    b="${b// /_}"
+    b="${b%.*}"
+    t="/tmp/xico/x_${b,,}_$(date +%y%m%d%6N).svg"
     s="${XC[size]}"
+
     cp "${XC_BASE}/lib/xico.svg" "$t"
 
     XC[input]="$i"
 
-    xc_echo "3:$i" "≫" "2:$o"
-    sleep "${XC[delay]}"
-    xc_scan
+    [ -d "$d" ] || mkdir -p "$d"
 
-    # exit
+    xc_scan
+    sleep "${XC[delay]}"
+
+    # populate svg template
     for k in "${!XC[@]}"; do
         printf "\e[35m%18s \e[33m%s\e[0m\n" "$k" "${XC[$k]}"
         sed -i -e "s/__${k}__/${XC[${k}]}/g" "$t"
     done
 
+    o=$(envsubst <<< "$o")
+
     xc_echo "4:temporary svg is ready" "2:${t}"
     xc_echo "6:creating" "3:${o}" $'\n'
+
     sleep "${XC[delay]}"
 
-    inkscape -w "$s" -h "$s" \
-        "$t" \
-        --export-type png \
-        -o "$o" 2>/dev/null
+    xc_echo '6:using engine:' "3:${ENGINE}"
+    xc_inkscape "$t" "$o" "$s"
+    # TODO: magick -density "$s" -background none \
+        #   "$t" "$o"
 
     xc_echo "2:successfully created" "3:${s}x${s}" in "2:${o}" $'\n'
     sleep "${XC[delay]}"
@@ -129,12 +162,26 @@ function xc_make {
 trap xc_trap EXIT
 mkdir /tmp/xico &>/dev/null || :
 
+xc_echo "3:󰧞" "4:engine executable lookup in" "3:\$PATH"
+
+for engine in "${!ENGINES[@]}"; do
+    if command -v "$engine" >/dev/null; then
+        ENGINE="$engine"
+    else
+        xc_echo "3:⸮" "8:‣" "6:${ENGINES[${engine}]}"
+        xc_echo $'\t' "8:target:" "3:${engine}"
+        xc_echo $'\t' "8:download:" "2:${ENGINE_URLS[${engine}]}"
+    fi
+done
+
+[ "$ENGINE" = "" ] && xc_fail "🗙 NO_ENGINE_FOUND" $'\n\t' "at least ONE engine is" "3:REQUIRED"
+
 #   ▀  TEMPLATE
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 function xc_load {
     local pre=''
     while read -r L; do
-        read -r act opt val < <(awk '{print $1,$2,$3}' <<< "$L")
+        read -r act opt val < <(awk '{print $1,$2,$3}' <<<"$L")
         if [ "$act" = "set" ]; then
             xc_pick "$opt" "$val"
         fi
@@ -144,9 +191,9 @@ function xc_load {
         fi
         if [ "$act" = "pre" ]; then
             xc_echo $' ... ' '7:prefix updated' "3:${opt}"
-            pre="${opt%/}"
+            pre="${opt%/}/"
         fi
-    done < <(sed -E '/^$|^[#]/d' < "${1}")
+    done < <(sed -E '/^$|^[#]/d' <"${1}")
     exit
 }
 
@@ -154,18 +201,27 @@ function xc_load {
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do
     case $1 in
-        -t | --template) template="$2"; shift ;;
-        -h | --help)     xc_help ;;
-        --no-delay)      XC[delay]=0; ;;
-        --*)             xc_pick "${1:2}" "$2"; shift ;;
-        -*)              xc_pick "${1:1}" "$2"; shift ;;
+        -t | --template)
+            template="$2"
+            shift
+            ;;
+        -h | --help) xc_help ;;
+        --no-delay) XC[delay]=0 ;;
+        --*)
+            xc_pick "${1:2}" "$2"
+            shift
+            ;;
+        -*)
+            xc_pick "${1:1}" "$2"
+            shift
+            ;;
     esac
     shift
 done
 
 [ -f "$template" ] && xc_load "$template"
 
-[ -n "$2" ] && xc_make "$1" "$2"
+[ "$2" != "" ] && xc_make "$1" "$2"
 
 # TODO: handle stdin
 # [ ! -t 0 ] && { read -r x; STATE[chr]="$x"; }
@@ -174,8 +230,7 @@ done
 #
 #  ▀▄▀ █ █▀▀ █▀█
 #  █░█ █ █▄▄ █▄█
-#  ▁▁▁▁▁▁▁▁v0.4▁
-#
+#  ▁▁▁▁▁▁▁▁v0.5▁
 #
 
 # vim:ft=bash
