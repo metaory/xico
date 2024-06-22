@@ -106,7 +106,7 @@ These options are available in template and CLI
 > long-options prefixed with double hyphen `--`
 > aliases with single hyphen `-`
 >
-> eg. `--text-font-size 9em` or `-fs 9em`
+> eg. `t_font-size 9em` or `-fs 9em`
 
 eg.
 
@@ -136,8 +136,8 @@ This will set or update the option
 
 	# foo.xc
 
-	set rect-fill '#3311FF'
-	set text-font-size 64px
+	set r_fill '#3311FF'
+	set t_font-size 64px
 
 
 Or alias _if available_
@@ -275,13 +275,13 @@ For `<text>` `[t_<attribute>]=<default>`
 
 eg.
 ```sh
-[text-stroke]='#0077EE'
-[text-stroke-width]=3
-[text-writing-mode]=vertical-lr
+[t_stroke]='#0077EE'
+[t_stroke-width]=3
+[t_writing-mode]=vertical-lr
 
-[rect-stroke-width]=2
-[rect-stroke-linejoin]=round
-[rect-stroke-miterlimit]=214
+[r_stroke-width]=2
+[r_stroke-linejoin]=round
+[r_stroke-miterlimit]=214
 ```
 
 ### The SVG template
