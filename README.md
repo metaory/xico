@@ -265,15 +265,13 @@ xico -t <path>
 ### Custom Attributes
 
 To add other attributes add an entry To add the `XC` associative array.
-Prefix `rect-` for `<rect>` element and `text-` for `<text>` element
+Prefix `r_` for `<rect>` element and `t_` for `<text>` element
 
 Almost all [Presentation attributes](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute#presentation_attributes) should work
 
-For `<rect>` element
-`[rect-<attribute>]=<default>`
+For `<rect>` `[r_<attribute>]=<default>`
 
-For `<text>`
-`[text-<attribute>]=<default>`
+For `<text>` `[t_<attribute>]=<default>`
 
 eg.
 ```sh
