@@ -134,7 +134,7 @@ This will set or update the option
 `set` commands can be repeated, the latest would take precedence.
 
 
-	# foo.tpl
+	# foo.xc
 
 	set rect-fill '#3311FF'
 	set text-font-size 64px
@@ -194,12 +194,12 @@ put ◧  tileleft.png
 	eg. xico -bg red -fg '#3311ff' 󰘧 hello.png
 
 
-#### 💡 Check complete template [templates/default.tpl](templates/default.tpl)
+#### 💡 Check complete template [templates/default.xc](templates/default.xc)
 
-#### 🐣 Check starter template [templates/starter.tpl](templates/starter.tpl)
+#### 🐣 Check starter template [templates/starter.xc](templates/starter.xc)
 
 ```
-cp templates/starter.tpl <path>
+cp templates/starter.xc <path>
 xico -t <path>
 ```
 
@@ -258,7 +258,7 @@ xico -t <path>
 	xico -fg '#AA1144' ✪  ~/pics/x2.png
 
 	# process a template file
-	# xico -t awesome-xico.tpl
+	# xico -t awesome-xico.xc
 
 ---
 
