@@ -1,7 +1,7 @@
 #
 #  ▀▄▀ █ █▀▀ █▀█
 #  █░█ █ █▄▄ █▄█
-#  ▁▁▁▁▁▁▁▁v0.6▁
+#  ▁▁▁▁▁▁▁▁v0.7▁
 #
 # https://github.com/metaory/xico
 # #######################################################################
@@ -128,6 +128,10 @@ set d 0
 # pre $HOME/awesome/themes/$USER/icons/layout
 
 #--@action put: [ <character> ] [ <path> ]
+put ᮷ xico.png
+
+
+#--@action reset | res: reset all set options
 put ᮷ xico.png
 
 # vim:ft=config:syntax=spec:commentstring=#%s:

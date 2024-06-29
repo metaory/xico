@@ -124,12 +124,12 @@ Or alias if available
 
 All options or their alias can be set in a xico template
 
-`set`, `put` and `pre` are the only commands
+`set`, `put`, `res` and `pre` are the only commands
 
 > [!NOTE]
 > `template` file **name** or **extension** can be anything
 
-##### Set command
+##### SET command
 
 	set <option> <value>
 
@@ -151,7 +151,7 @@ Or alias _if available_
 
 Set commands can be repeated, every set will overwrite the previous value
 
-##### Put command
+##### PUT command
 
 `put <char> <destination>`
 
@@ -160,13 +160,23 @@ with the current set options
 
 Put commands can be repeated, every put will use the options set to that point
 
-##### Pre command
+##### RES command
+
+`res`
+
+Or
+
+`reset`
+
+Will reset all `set` options, any `put` afterwards would use the default options
+
+##### PRE command
 
 `pre <path>`
 
 Any `put` afterwards will output with this prefix.
 
-eg.
+EG.
 
 ```sh
 # ...
@@ -193,6 +203,11 @@ set fg #AA44FF
 
 put ⬓  tilebottom.png
 put ◧  tileleft.png
+
+res
+
+put ⬓  with_default_option_tilebottom.png
+put ◧  with_default_option_tileleft.png
 ```
 
 	eg. xico -bg red -fg '#3311ff' 󰘧 hello.png
@@ -201,6 +216,8 @@ put ◧  tileleft.png
 #### 💡 Check complete template [templates/default.xc](templates/default.xc)
 
 #### 🐣 Check starter template [templates/starter.xc](templates/starter.xc)
+
+## Get Started
 
 ```
 cp templates/starter.xc <path>
@@ -336,6 +353,7 @@ TODO
 - [ ] Dynamic readme usage
 - [ ] Dynamic cli usage
 - [X] Dynamic attributes
+- [X] Reset opts action
 - [X] Template
 - [x] Attributes; bg, fg, font, size
 
@@ -370,7 +388,7 @@ TODO
 
 	▀▄▀ █ █▀▀ █▀█
 	█░█ █ █▄▄ █▄█
-	▁▁▁▁▁▁▁▁v0.6▁
+	▁▁▁▁▁▁▁▁v0.7▁
 
 
 ---

@@ -66,6 +66,9 @@ declare -A XC_ALIAS=(
 declare -a XC_OPTS
 mapfile -t XC_OPTS < <(printf '%s\n' "${!XC[@]}" | sort)
 
+declare -g DEFAULT_OPTS
+DEFAULT_OPTS="$(declare -p XC)"
+
 #
 #   ▀  DEFINITIONS
 # ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -186,17 +189,25 @@ function xc_load {
     local pre=''
     while read -r L; do
         read -r act opt val < <(awk '{print $1,$2,$3}' <<<"$L")
-        if [ "$act" = "set" ]; then
-            xc_pick "$opt" "$val"
-        fi
-        if [ "$act" = "put" ]; then
-            val="${pre}${val}"
-            xc_make "$opt" "$val"
-        fi
-        if [ "$act" = "pre" ]; then
-            xc_echo $' ... ' '7:prefix updated' "3:${opt}"
-            pre="${opt%/}/"
-        fi
+
+        case "$act" in
+            set)
+                xc_pick "$opt" "$val"
+                ;;
+            put)
+                val="${pre}${val}"
+                xc_make "$opt" "$val"
+                ;;
+            pre)
+                xc_echo $' ... ' '7:prefix updated' "3:${opt}"
+                pre="${opt%/}/"
+                ;;
+            res|reset)
+                xc_echo $' ... ' '3:reset all set options' "6:${DEFAULT_OPTS}"
+                eval "$DEFAULT_OPTS"
+                ;;
+        esac
+
     done < <(sed -E '/^$|^[#]/d' <"${1}")
 }
 
