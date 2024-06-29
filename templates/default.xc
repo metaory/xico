@@ -1,32 +1,38 @@
-# xico v0.5
+#
+#  ▀▄▀ █ █▀▀ █▀█
+#  █░█ █ █▄▄ █▄█
+#  ▁▁▁▁▁▁▁▁v0.6▁
+#
+# https://github.com/metaory/xico
+# #######################################################################
 
-# ╭────────────────────┬────────┬───────────┬───────────────────────────────────────────────────────────────────────────────────╮
-# │ option             │ alias  │ default   │ type                                                                              │
-# ╞════════════════════╪════════╪═══════════╪═══════════════════════════════════════════════════════════════════════════════════╡
-# │ r_fill             │ bg     │ black     │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
-# │ r_width            ┆ w      ┆ 100       ┆ [ auto | <length> | <percentage> ]                                                │
-# │ r_height           │ h      │ 100       │ [ auto | <length> | <percentage> ]                                                │
-# │ r_opacity          ┆ o      ┆ 0.5       ┆ [ <number>(0,1) | <percentage> ]                                                  │
-# │ r_rx               │ r      │ 25        │ [ <length> | <percentage> | auto ]                                                │
-# │ r_ry               ┆ r      ┆ 25        ┆ [ <length> | <percentage> | auto ]                                                │
-# │ r_x                │        │ 0         │ [ <length> | <percentage> ]                                                       │
-# │ r_y                ┆        ┆ 0         ┆ [ <length> | <percentage> ]                                                       │
-# ├╌─╌╌╌─╌╌─╌─╌╌╌╌─┄╌──┼─╌╌─╌─╌─┼─╌╌─╌╌─╌─╌─┼─╌╌─╌─╌─╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌─────────┤
-# │ t_fill             │ fg     │ #3311FF   │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
-# │ t_font-family      ┆ ff     ┆ monospace ┆ [ <family-name> | <generic-family> ]                                              │
-# │ t_font-weight      │ fw     │ bold      │ [ <normal | bold | bolder | lighter | <number> ]                                  │
-# │ t_font-size        ┆ fs     ┆ 8em       ┆ [ <absolute-size> | <relative-size> | <length-percentage> ]                       │
-# │ t_rotate           │ rotate │ 0         │ [ auto | auto-reverse | <number> ]                                                │
-# │ t_transform        │        │ none      │ [ none | <transform-list> ]                                                       │
-# │ t_transform-origin ┆        ┆ center    ┆ [ <transform-origin> ]                                                            ┆
-# │ t_dx               │        │ 0         │ [ <length-percentage> | <number> ]                                                │
-# │ t_dy               ┆        ┆ 4         ┆ [ <length-percentage> | <number> ]                                                │
-# │ t_x                │ x      │ 50        │ [ <length> | <percentage> ]                                                       │
-# │ t_y                ┆ y      ┆ 50        ┆ [ <length> | <percentage> ]                                                       │
-# ├╌─╌╌╌─╌╌─╌─╌╌╌╌─┄╌──┼─╌╌─╌─╌─┼─╌╌─╌╌─╌─╌─┼─╌╌─╌─╌─╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌─────────┤
-# │ size               ╎ s      ╎ 500       ╎ [ <number> ]                                                                      │
-# │ delay              ╎ d      ╎ 3         ╎ [ <number> ]                                                                      │
-# ╰────────────────────┴────────┴───────────┴───────────────────────────────────────────────────────────────────────────────────╯
+# ╭────────────────────┬────────┬────────────────┬───────────────────────────────────────────────────────────────────────────────────╮
+# │ option             │ alias  │ default        │ type                                                                              │
+# ╞════════════════════╪════════╪════════════════╪═══════════════════════════════════════════════════════════════════════════════════╡
+# │ r_fill             │ bg     │ black          │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
+# │ r_width            ┆ w      ┆ 100            ┆ [ auto | <length> | <percentage> ]                                                │
+# │ r_height           │ h      │ 100            │ [ auto | <length> | <percentage> ]                                                │
+# │ r_opacity          ┆ o      ┆ 0.5            ┆ [ <number>(0,1) | <percentage> ]                                                  │
+# │ r_rx               │ r      │ 25             │ [ <length> | <percentage> | auto ]                                                │
+# │ r_ry               ┆ r      ┆ 25             ┆ [ <length> | <percentage> | auto ]                                                │
+# │ r_x                │        │ 0              │ [ <length> | <percentage> ]                                                       │
+# │ r_y                ┆        ┆ 0              ┆ [ <length> | <percentage> ]                                                       │
+# ├╌─╌╌╌─╌╌─╌─╌╌╌╌─┄╌──┼─╌╌─╌─╌─┼─╌╌─╌╌─╌─╌──────┼─╌╌─╌─╌─╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌─────────┤
+# │ t_fill             │ fg     │ #3311FF        │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
+# │ t_font-family      ┆ ff     ┆ monospace      ┆ [ <family-name> | <generic-family> ]                                              │
+# │ t_font-weight      │ fw     │ bold           │ [ <normal | bold | bolder | lighter | <number> ]                                  │
+# │ t_font-size        ┆ fs     ┆ 8em            ┆ [ <absolute-size> | <relative-size> | <length-percentage> ]                       │
+# │ t_rotate           │ rotate │ 0              │ [ auto | auto-reverse | <number> ]                                                │
+# │ t_transform        │        │ translate(0,0) │ [ <transform-function> ]                                                          │
+# │ t_transform-origin ┆        ┆ center         ┆ [ <transform-origin> ]                                                            ┆
+# │ t_dx               │        │ 0              │ [ <length-percentage> | <number> ]                                                │
+# │ t_dy               ┆        ┆ 3.5            ┆ [ <length-percentage> | <number> ]                                                │
+# │ t_x                │ x      │ 50             │ [ <length> | <percentage> ]                                                       │
+# │ t_y                ┆ y      ┆ 50             ┆ [ <length> | <percentage> ]                                                       │
+# ├╌─╌╌╌─╌╌─╌─╌╌╌╌─┄╌──┼─╌╌─╌─╌─┼─╌╌─╌╌─╌─╌─╌──╌─┼─╌╌─╌─╌─╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌─────────┤
+# │ size               ╎ s      ╎ 500            ╎ [ <number> ]                                                                      │
+# │ delay              ╎ d      ╎ 3              ╎ [ <number> ]                                                                      │
+# ╰────────────────────┴────────┴────────────────┴───────────────────────────────────────────────────────────────────────────────────╯
 
 ##################################
 ## below are the default options
@@ -51,8 +57,11 @@
 #
 # xico -t default.xc
 #####
-
-# #######################################################################
+## or copy the starter template and start there
+#
+# cp templates/starter.xc <path>
+# xico -t <path>
+#########################################################################
 
 #--@opt r_fill | bg: [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] = black
 set bg black
@@ -100,8 +109,8 @@ set t_transform-origin center
 #--@opt t_dx: [ <length-percentage> | <number> ] = 0
 set t_dx 0
 
-#--@opt t_dy: [ <length-percentage> | <number> ] = 4
-set t_dy 4
+#--@opt t_dy: [ <length-percentage> | <number> ] = 3.5
+set t_dy 3.5
 
 #--@opt t_x | x: [ <length> | <percentage> ] = 50
 set x 50

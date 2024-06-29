@@ -21,7 +21,7 @@
   <img src=".github/assets/x14.png" width="96" />
   <img src=".github/assets/x15.png" width="96" />
   <img src=".github/assets/x16.png" width="96" />
-  <img src=".github/assets/x17.png" width="96" />
+  <!-- <img src=".github/assets/x17.png" width="96" /> -->
   <img src=".github/assets/x18.png" width="96" />
 </div>
 
@@ -45,32 +45,36 @@ Check [Custom Attributes](#custom-attributes) section for adding custom attribut
 
 ## SYNOPSIS
 
-	xico [OPTION]... CHARACTER FILE
+	xico [OPTION]... CHR FILE
 
+	possible output FILE extension[svg,png,ps,eps,pdf,emf,wmf,xaml]
 
 ## Options
 
 ### CLI Only Options
 
 These options are only available on CLI
+ --export-filename  Output file name
 
 
 | cli option | alias | default |
 | ---------- | ----- | ------- |
-| --delay    | -d    | 3       |
 | --help     | -h    |         |
-| --no-delay |       |         |
 | --size     | -s    | 500     |
 | --template | -t    |         |
+| --delay    |       | 3       |
+| --no-delay |       |         |
 
 ### Options
 
 These options are available in template and CLI
 
-| option   | alias | default |
-| -------- | ----- | ------- |
-| delay    | d     | 3       |
-| size     | s     | 500     |
+| option            | alias | default |
+| ----------------- | ----- | ------- |
+| delay             | d     | 3       |
+| size              | s     | 500     |
+| export-opacity    | xo    | 0       |
+| export-background | xbg   | black   |
 
 | rect option  | alias | default |
 | ------------ | ----- | ------- |
@@ -83,19 +87,19 @@ These options are available in template and CLI
 | r_x          |       | 0       |
 | r_y          |       | 0       |
 
-| text option        | alias  | default   |
-| ------------------ | ------ | --------- |
-| t_fill             | fg     | #3311FF   |
-| t_font-family      | ff     | monospace |
-| t_font-weight      | fw     | bold      |
-| t_font-size        | fs     | 8em       |
-| t_rotate           |        | 0         |
-| t_transform        |        |           |
-| t_transform-origin |        |           |
-| t_dx               |        | 0         |
-| t_dy               |        | 4         |
-| t_x                | x      | 50        |
-| t_y                | y      | 50        |
+| text option        | alias  | default        |
+| ------------------ | ------ | -------------- |
+| t_fill             | fg     | #3311FF        |
+| t_font-family      | ff     | monospace      |
+| t_font-weight      | fw     | bold           |
+| t_font-size        | fs     | 8em            |
+| t_rotate           |        | 0              |
+| t_transform        |        | translate(0,0) |
+| t_transform-origin |        | center         |
+| t_dx               |        | 0              |
+| t_dy               |        | 3.5            |
+| t_x                | x      | 50             |
+| t_y                | y      | 50             |
 
 
 #### CLI Usage
@@ -136,13 +140,13 @@ This will set or update the option
 
 	# foo.xc
 
-	set r_fill '#3311FF'
+	set r_fill #3311FF
 	set t_font-size 64px
 
 
 Or alias _if available_
 
-	set bg '#3311FF'
+	set bg #3311FF
 	set fs 10em
 
 Set commands can be repeated, every set will overwrite the previous value
@@ -366,7 +370,7 @@ TODO
 
 	▀▄▀ █ █▀▀ █▀█
 	█░█ █ █▄▄ █▄█
-	▁▁▁▁▁▁▁▁v0.5▁
+	▁▁▁▁▁▁▁▁v0.6▁
 
 
 ---

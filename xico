@@ -22,30 +22,33 @@ declare -A ENGINE_URLS=(
 declare ENGINE
 
 declare -A XC=(
-    [r_fill]="black"
-    [r_width]="100"
-    [r_height]="100"
-    [r_opacity]="0.5"
-    [r_rx]="25"
-    [r_ry]="25"
-    [r_x]="0"
-    [r_y]="0"
+    [export-background]=black
+    [export-opacity]=1
+    [r_opacity]=0.5
+    [r_fill]=black
+    [r_width]=100
+    [r_height]=100
+    [r_rx]=25
+    [r_ry]=25
+    [r_x]=0
+    [r_y]=0
     [t_fill]="#3311FF"
-    [t_font-family]="monospace"
-    [t_font-weight]="bold"
-    [t_font-size]="8em"
-    [t_rotate]="0"
-    [t_transform]="none"
-    [t_transform-origin]="0, 0"
+    [t_font-family]=monospace
+    [t_font-weight]=bold
+    [t_font-size]=8em
+    [t_rotate]=0
+    [t_transform]="translate(0,0)"
+    [t_transform-origin]=center
     [t_dx]="0"
-    [t_dy]="4"
-    [t_x]="50"
-    [t_y]="50"
-    [size]="500"
-    [delay]="3"
+    [t_dy]=3.5
+    [t_x]=50
+    [t_y]=50
+    [size]=500
+    [delay]=3
 )
 declare -A XC_ALIAS=(
-    [opacity]=r_opacity
+    [xbg]=export-background
+    [xo]=export-opacity
     [bg]=r_fill
     [fg]=t_fill
     [fw]=t_font-weight
@@ -57,8 +60,8 @@ declare -A XC_ALIAS=(
     [w]=r_width
     [h]=r_height
     [r]=radius
-    [d]=delay
     [s]=size
+    [d]=delay
 )
 declare -a XC_OPTS
 mapfile -t XC_OPTS < <(printf '%s\n' "${!XC[@]}" | sort)
@@ -87,7 +90,7 @@ function xc_help {
     xc_echo "4:$SYNOPSIS"
     exit
 }
-function xc_trap { (($?)) && xc_echo 3:$'\n xico --help'; }
+function xc_trap { local c=$?; (( c )) && xc_echo $'\n' '6: xico --help'; exit "$c"; }
 function xc_scan {
     for k in "${XC_OPTS[@]}"; do
         printf "\e[34m%18s \e[32m%s\e[0m\n" "$k" "${XC[$k]}"
@@ -106,15 +109,17 @@ function xc_pick {
     XC["$k"]="$v"
     xc_echo " ::" "3:set" "$k" "$v"
 }
+
 function xc_inkscape {
     local i="${1:?NO_IN}"
     local o="${2:?NO_OUT}"
-    local s="${3:?NO_SIZE}"
-    inkscape -w "$s" -h "$s" \
-        "$i" \
-        --export-type png \
-        -o "$o"
+    inkscape \
+        --export-filename "$o" \
+        --export-width  "${XC[size]}" \
+        --export-height "${XC[size]}" \
+        "$i" 2>&1
 }
+
 function xc_make {
     i="${1:?BAD_INPUT}"
     o="${2:?BAD_OUTPUT}"
@@ -123,7 +128,6 @@ function xc_make {
     b="${b// /_}"
     b="${b%.*}"
     t="/tmp/xico/x_${b,,}_$(date +%y%m%d%6N).svg"
-    s="${XC[size]}"
 
     cp "${XC_BASE}/lib/xico.svg" "$t"
 
@@ -148,7 +152,7 @@ function xc_make {
     sleep "${XC[delay]}"
 
     xc_echo '6:using engine:' "3:${ENGINE}"
-    xc_inkscape "$t" "$o" "$s"
+    xc_inkscape "$t" "$o"
     # TODO: magick -density "$s" -background none \
         #   "$t" "$o"
 
@@ -194,7 +198,6 @@ function xc_load {
             pre="${opt%/}/"
         fi
     done < <(sed -E '/^$|^[#]/d' <"${1}")
-    exit
 }
 
 #   ▀  MAIN
@@ -223,6 +226,8 @@ done
 
 [ "$2" != "" ] && xc_make "$1" "$2"
 
+exit 0
+
 # TODO: handle stdin
 # [ ! -t 0 ] && { read -r x; STATE[chr]="$x"; }
 
@@ -230,7 +235,7 @@ done
 #
 #  ▀▄▀ █ █▀▀ █▀█
 #  █░█ █ █▄▄ █▄█
-#  ▁▁▁▁▁▁▁▁v0.5▁
+#  ▁▁▁▁▁▁▁▁v0.6▁
 #
 
 # vim:ft=bash
