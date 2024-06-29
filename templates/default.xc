@@ -134,4 +134,4 @@ put ᮷ xico.png
 #--@action reset | res: reset all set options
 put ᮷ xico.png
 
-# vim:ft=config:syntax=spec:commentstring=#%s:
+# vim: ft=config:syntax=spec:commentstring=#%s:nowrap:nornu:nonu:nospell:nocul:nocuc

@@ -84,4 +84,4 @@ put ◧  tileleft.png
 # xico -t starter.xc
 ###########################################################
 
-# vim:ft=config:syntax=spec:commentstring=#%s:
+# vim: ft=config:syntax=spec:commentstring=#%s:nowrap:nornu:nonu:nospell:nocul:nocuc
