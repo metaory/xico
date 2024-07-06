@@ -188,7 +188,7 @@ done
 function xc_load {
     local pre=''
     while read -r L; do
-        read -r act opt val < <(awk '{print $1,$2,$3}' <<<"$L")
+        read -r act opt val < <(awk '{print $1, $2, $1=$2="",$0}1' <<<"$L")
 
         case "$act" in
             set)
