@@ -29,10 +29,16 @@
 # │ t_dy               ┆        ┆ 3.5            ┆ [ <length-percentage> | <number> ]                                                │
 # │ t_x                │ x      │ 50             │ [ <length> | <percentage> ]                                                       │
 # │ t_y                ┆ y      ┆ 50             ┆ [ <length> | <percentage> ]                                                       │
-# ├╌─╌╌╌─╌╌─╌─╌╌╌╌─┄╌──┼─╌╌─╌─╌─┼─╌╌─╌╌─╌─╌─╌──╌─┼─╌╌─╌─╌─╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌─────────┤
-# │ size               ╎ s      ╎ 500            ╎ [ <number> ]                                                                      │
-# │ delay              ╎ d      ╎ 3              ╎ [ <number> ]                                                                      │
 # ╰────────────────────┴────────┴────────────────┴───────────────────────────────────────────────────────────────────────────────────╯
+
+# ╭─────────────────────┬───────┬─────────┬──────────────────────────────────╮
+# │ option              │ alias │ default │ type                             │
+# ╞═════════════════════╪═══════╪═════════╪══════════════════════════════════╡
+# │ background          ╎ xbg   ╎ black   ╎ [ <color> ]                      │
+# │ background-opacity  ╎ xbo   ╎ 0       ╎ [ <number>(0,1) | <percentage> ] │
+# │ size                ╎ s     ╎ 500     ╎ [ <number> ]                     │
+# │ delay               ╎ d     ╎ 3       ╎ [ <number> ]                     │
+# ╰─────────────────────┴───────┴─────────┴──────────────────────────────────╯
 
 ##################################
 ## below are the default options
@@ -124,7 +130,14 @@ set s 500
 #--@opt delay | d: [ <number> ] = 3
 set d 0
 
+#--@opt background | xbg : [ <color> ]
+set xbg #DD6688
+
+#--@opt background-opacity | xbo : [ <length-percentage> | <number> ] = 0
+set xbo 0
+
 #--@action pre: [ <path> ]
+pre foo/layout
 # pre $HOME/awesome/themes/$USER/icons/layout
 
 #--@action put: [ <character> ] [ <path> ]

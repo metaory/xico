@@ -69,12 +69,12 @@ These options are only available on CLI
 
 These options are available in template and CLI
 
-| option            | alias | default |
-| ----------------- | ----- | ------- |
-| delay             | d     | 3       |
-| size              | s     | 500     |
-| export-opacity    | xo    | 0       |
-| export-background | xbg   | black   |
+| option             | alias | default |
+| -------------------| ----- | ------- |
+| delay              | d     | 3       |
+| size               | s     | 500     |
+| background         | xbg   | black   |
+| background-opacity | xbo   | 0       |
 
 | rect option  | alias | default |
 | ------------ | ----- | ------- |

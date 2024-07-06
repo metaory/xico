@@ -22,8 +22,6 @@ declare -A ENGINE_URLS=(
 declare ENGINE
 
 declare -A XC=(
-    [export-background]=black
-    [export-opacity]=1
     [r_opacity]=0.5
     [r_fill]=black
     [r_width]=100
@@ -45,10 +43,10 @@ declare -A XC=(
     [t_y]=50
     [size]=500
     [delay]=3
+    [background]=black
+    [background-opacity]=0
 )
 declare -A XC_ALIAS=(
-    [xbg]=export-background
-    [xo]=export-opacity
     [bg]=r_fill
     [fg]=t_fill
     [fw]=t_font-weight
@@ -62,6 +60,8 @@ declare -A XC_ALIAS=(
     [r]=radius
     [s]=size
     [d]=delay
+    [xbg]=background
+    [xbo]=background-opacity
 )
 declare -a XC_OPTS
 mapfile -t XC_OPTS < <(printf '%s\n' "${!XC[@]}" | sort)
@@ -120,6 +120,8 @@ function xc_inkscape {
         --export-filename "$o" \
         --export-width  "${XC[size]}" \
         --export-height "${XC[size]}" \
+        --export-background  "${XC[background]}" \
+        --export-background-opacity "${XC[background-opacity]}" \
         "$i" 2>&1
 }
 
@@ -246,7 +248,7 @@ exit 0
 #
 #  ▀▄▀ █ █▀▀ █▀█
 #  █░█ █ █▄▄ █▄█
-#  ▁▁▁▁▁▁▁▁v0.6▁
+#  ▁▁▁▁▁▁▁▁v0.7▁
 #
 
 # vim:ft=bash
