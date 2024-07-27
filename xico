@@ -110,13 +110,14 @@ function xc_pick {
     fi
     [ "${XC_OPTS[*]}" == "${XC_OPTS[*]/${k}/}" ] && xc_fail BAD_OPTION "$k"
     XC["$k"]="$v"
-    xc_echo " ::" "3:set" "$k" "$v"
+    xc_echo " ::" "3:set" "$k" "[$v]"
 }
 
 function xc_inkscape {
     local i="${1:?NO_IN}"
     local o="${2:?NO_OUT}"
     inkscape \
+        --export-text-to-path \
         --export-filename "$o" \
         --export-width  "${XC[size]}" \
         --export-height "${XC[size]}" \
