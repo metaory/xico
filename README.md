@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>X̶̶I̶̶C̶̶O</h1>
+  <h1>𐆖𖭐ꛕ𐊔</h1>
   <img src=".github/assets/xico.png" width="168px"/>
   <h4>simple cli to make png images from ascii characters</h4>
 </div>
