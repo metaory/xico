@@ -90,6 +90,8 @@ These options are available in template and CLI
 | text option        | alias  | default        |
 | ------------------ | ------ | -------------- |
 | t_fill             | fg     | #3311FF        |
+| t_stroke-color     | stroke | cyan           |
+| t_stroke-width     | border | 0              |
 | t_font-family      | ff     | monospace      |
 | t_font-weight      | fw     | bold           |
 | t_font-size        | fs     | 8em            |
@@ -119,6 +121,23 @@ eg.
 Or alias if available
 
 	xico -bg '#3300FF' ᮿ
+
+<!-- https://github.com/sigoden/aichat/blob/main/README.md?plain=1#L43 -->
+
+### Multi-Form Input
+
+Accept various forms of input, such as stdin, local files & dirs, and remote URLs.
+
+| Input             | Example                              |
+| ----------------- | ------------------------------------ |
+| CMD input         | `xico hello`                       |
+| Stdin pipe        | `cat data.txt \| xico`             |
+| Local files       | `xico -f data.txt`                 |
+| Local images      | `xico -f image.png`                |
+| Local directories | `xico -f dir/`                     |
+| Remote URLs       | `xico -f https://example.com`      |
+| Combine Inputs    | `xico -f dir/ -f data.txt explain` |
+
 
 #### Template Usage
 
@@ -226,7 +245,7 @@ xico -t <path>
 
 ---
 
-> [!Caution]
+> [!CAUTION]
 > The final positional arguments is required if no template is provided
 
 > [!NOTE]
@@ -237,7 +256,7 @@ xico -t <path>
 > eg. `size 700` or `s 700`
 > would be a square 700x700px png
 
-> [!Important]
+> [!IMPORTANT]
 > `size` is integer without any unit, _its always in `px`_
 
 > [!NOTE]
@@ -254,14 +273,14 @@ xico -t <path>
 > set radius to `50` for a **perfect circle**
 > you can set radius with `r` or `r_rx` and `r_ry`
 
-> [!Caution]
+> [!CAUTION]
 > options with special character need quoting
 
 > [!NOTE]
 > Options can be used mixed together
 > as command-line options or in template
 
-> [!Important]
+> [!IMPORTANT]
 > Options can be repeated
 > the final one takes precedence.
 
@@ -296,12 +315,8 @@ For `<text>` `[t_<attribute>]=<default>`
 
 eg.
 ```sh
-[t_stroke]='#0077EE'
-[t_stroke-width]=3
 [t_writing-mode]=vertical-lr
 
-[r_stroke-width]=2
-[r_stroke-linejoin]=round
 [r_stroke-miterlimit]=214
 ```
 

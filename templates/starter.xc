@@ -1,10 +1,24 @@
-#
 #  ▀▄▀ █ █▀▀ █▀█
 #  █░█ █ █▄▄ █▄█
 #  ▁▁▁▁▁▁▁▁v0.7▁
 #
-# https://github.com/metaory/xico
-# #######################################################################
+
+# ░░ SETUP ░░░░░░░░░░░░░░░░░
+# ░░ ▔▔▔▔▔                ░░
+# ░░  copy this template  ░░
+# ░░                      ░░
+# ░░ cp starter.xc [PATH] ░░
+# ░░                      ░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░
+#
+# ░░ USAGE ░░░░░░░░░░░░░░░░░
+# ░░ ▔▔▔▔▔                ░░
+# ░░   run this template  ░░
+# ░░                      ░░
+# ░░  xico -t [FILE]      ░░
+# ░░                      ░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░
+
 
 # delay
 set d 0
@@ -63,6 +77,8 @@ put ◧  tileleft.png
 # │ r_y                ┆        ┆ 0              ┆ [ <length> | <percentage> ]                                                       │
 # ├╌─╌╌╌─╌╌─╌─╌╌╌╌─┄╌──┼─╌╌─╌─╌─┼─╌╌─╌╌─╌─╌──────┼─╌╌─╌─╌─╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌─────────┤
 # │ t_fill             │ fg     │ #3311FF        │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
+# │ t_stroke-color     │ stroke │ cyan           │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
+# │ t_stroke-width     │ border │ 0              │ [ <length> | <percentage> ]                                                       │
 # │ t_font-family      ┆ ff     ┆ monospace      ┆ [ <family-name> | <generic-family> ]                                              │
 # │ t_font-weight      │ fw     │ bold           │ [ <normal | bold | bolder | lighter | <number> ]                                  │
 # │ t_font-size        ┆ fs     ┆ 8em            ┆ [ <absolute-size> | <relative-size> | <length-percentage> ]                       │

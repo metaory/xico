@@ -27,6 +27,8 @@
       y="__t_y__"
       dx="__t_dx__"
       dy="__t_dy__"
+      stroke="__t_stroke-color__"
+      stroke-width="__t_stroke-width__"
       alignment-baseline="central"
       dominant-baseline="central"
       vertical-align="middle"

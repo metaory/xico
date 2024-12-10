@@ -1,10 +1,25 @@
-#
 #  ▀▄▀ █ █▀▀ █▀█
 #  █░█ █ █▄▄ █▄█
 #  ▁▁▁▁▁▁▁▁v0.7▁
 #
-# https://github.com/metaory/xico
-# #######################################################################
+
+# ░░ SETUP ░░░░░░░░░░░░░░░░░
+# ░░ ▔▔▔▔▔                ░░
+# ░░  copy this template  ░░
+# ░░                      ░░
+# ░░ cp default.xc [PATH] ░░
+# ░░                      ░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░
+#
+# ░░ USAGE ░░░░░░░░░░░░░░░░░
+# ░░ ▔▔▔▔▔                ░░
+# ░░   run this template  ░░
+# ░░                      ░░
+# ░░  xico -t [FILE]      ░░
+# ░░                      ░░
+# ░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+
 
 # ╭────────────────────┬────────┬────────────────┬───────────────────────────────────────────────────────────────────────────────────╮
 # │ option             │ alias  │ default        │ type                                                                              │
@@ -19,6 +34,8 @@
 # │ r_y                ┆        ┆ 0              ┆ [ <length> | <percentage> ]                                                       │
 # ├╌─╌╌╌─╌╌─╌─╌╌╌╌─┄╌──┼─╌╌─╌─╌─┼─╌╌─╌╌─╌─╌──────┼─╌╌─╌─╌─╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌──╌╌─╌─╌─╌╌─╌─╌─────────┤
 # │ t_fill             │ fg     │ #3311FF        │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
+# │ t_stroke-color     │ stroke │ cyan           │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
+# │ t_stroke-width     │ border │ 0              │ [ <length> | <percentage> ]                                                       │
 # │ t_font-family      ┆ ff     ┆ monospace      ┆ [ <family-name> | <generic-family> ]                                              │
 # │ t_font-weight      │ fw     │ bold           │ [ <normal | bold | bolder | lighter | <number> ]                                  │
 # │ t_font-size        ┆ fs     ┆ 8em            ┆ [ <absolute-size> | <relative-size> | <length-percentage> ]                       │
@@ -93,6 +110,12 @@ set r_y 0
 
 #--@opt t_fill | fg: [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] = #3311FF
 set fg #3311FF
+
+#--@opt t_stroke-color | stroke: [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] = cyan
+set stroke cyan
+
+#--@opt t_stroke-width | border: [ <length> | <percentage> ] = 0
+set border 4
 
 #--@opt t_font-family | ff: [ <family-name> | <generic-family> ] = monospace
 set ff monospace
