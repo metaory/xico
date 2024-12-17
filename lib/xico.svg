@@ -29,6 +29,7 @@
       dy="__t_dy__"
       stroke="__t_stroke-color__"
       stroke-width="__t_stroke-width__"
+      stroke-linecap="__t_stroke-linecap__"
       stroke-linejoin="__t_stroke-linejoin__"
       alignment-baseline="central"
       dominant-baseline="central"

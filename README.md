@@ -92,6 +92,7 @@ These options are available in template and CLI
 | t_fill             | fg     | #3311FF        |
 | t_stroke-color     | stroke | cyan           |
 | t_stroke-width     | border | 0              |
+| t_stroke-linecap   |        | round          |
 | t_stroke-linejoin  |        | round          |
 | t_font-family      | ff     | monospace      |
 | t_font-weight      | fw     | bold           |

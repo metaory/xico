@@ -36,6 +36,7 @@
 # │ t_fill             │ fg     │ #3311FF        │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
 # │ t_stroke-color     │ stroke │ cyan           │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
 # │ t_stroke-width     │ border │ 0              │ [ <length> | <percentage> ]                                                       │
+# │ t_stroke-linecap   │        │ round          │ [ <butt | round | square> ]                                                       │
 # │ t_stroke-linejoin  │        │ round          │ [ <arcs | bevel |miter | miter-clip | round> ]                                    │
 # │ t_font-family      ┆ ff     ┆ monospace      ┆ [ <family-name> | <generic-family> ]                                              │
 # │ t_font-weight      │ fw     │ bold           │ [ <normal | bold | bolder | lighter | <number> ]                                  │
@@ -117,6 +118,9 @@ set stroke cyan
 
 #--@opt t_stroke-width | border: [ <length> | <percentage> ] = 0
 set border 4
+
+#--@opt t_stroke-linecap: [ <butt | round | square ] = round
+set stroke-linecap round
 
 #--@opt t_stroke-linejoin: [ <arcs | bevel |miter | miter-clip | round> ] = round
 set stroke-linejoin round
