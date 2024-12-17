@@ -43,6 +43,7 @@ declare -A XC=(
     [t_y]=50
     [t_stroke-color]=cyan
     [t_stroke-width]=0
+    [t_stroke-linejoin]=round
     [size]=500
     [delay]=3
     [background]=black

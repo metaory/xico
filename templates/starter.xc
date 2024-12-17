@@ -79,6 +79,7 @@ put ◧  tileleft.png
 # │ t_fill             │ fg     │ #3311FF        │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
 # │ t_stroke-color     │ stroke │ cyan           │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
 # │ t_stroke-width     │ border │ 0              │ [ <length> | <percentage> ]                                                       │
+# │ t_stroke-linejoin  │        │ round          │ [ <arcs | bevel |miter | miter-clip | round> ]                                    │
 # │ t_font-family      ┆ ff     ┆ monospace      ┆ [ <family-name> | <generic-family> ]                                              │
 # │ t_font-weight      │ fw     │ bold           │ [ <normal | bold | bolder | lighter | <number> ]                                  │
 # │ t_font-size        ┆ fs     ┆ 8em            ┆ [ <absolute-size> | <relative-size> | <length-percentage> ]                       │

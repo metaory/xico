@@ -36,6 +36,7 @@
 # │ t_fill             │ fg     │ #3311FF        │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
 # │ t_stroke-color     │ stroke │ cyan           │ [ <hex-color> | <named-color> | <rgb()> | <rgba()> | <hsl()> <hsla()> | <lab()> ] │
 # │ t_stroke-width     │ border │ 0              │ [ <length> | <percentage> ]                                                       │
+# │ t_stroke-linejoin  │        │ round          │ [ <arcs | bevel |miter | miter-clip | round> ]                                    │
 # │ t_font-family      ┆ ff     ┆ monospace      ┆ [ <family-name> | <generic-family> ]                                              │
 # │ t_font-weight      │ fw     │ bold           │ [ <normal | bold | bolder | lighter | <number> ]                                  │
 # │ t_font-size        ┆ fs     ┆ 8em            ┆ [ <absolute-size> | <relative-size> | <length-percentage> ]                       │
@@ -116,6 +117,9 @@ set stroke cyan
 
 #--@opt t_stroke-width | border: [ <length> | <percentage> ] = 0
 set border 4
+
+#--@opt t_stroke-linejoin: [ <arcs | bevel |miter | miter-clip | round> ] = round
+set stroke-linejoin round
 
 #--@opt t_font-family | ff: [ <family-name> | <generic-family> ] = monospace
 set ff monospace
