@@ -5,7 +5,7 @@
 </div>
 
 <div align="center">
-    <img src="https://raw.githubusercontent.com/metaory/metaory/refs/heads/master/.github/xico_f/README.png" height="640"/>
+    <img src="https://raw.githubusercontent.com/metaory/metaory/refs/heads/master/.github/xico_f/README.png" />
     <p><code>@1736000000</code></p>
 </div>
 
