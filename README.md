@@ -1,7 +1,12 @@
 <div align="center">
   <h1>𐆖𖭐ꛕ𐊔</h1>
   <img src=".github/assets/xico.png" width="168px"/>
-  <h4>simple cli to make png images from ascii characters</h4>
+  <h4>simple cli to make png images from unicode characters</h4>
+</div>
+
+<div align="center">
+    <img src="https://raw.githubusercontent.com/metaory/metaory/refs/heads/master/.github/xico_f/README.png" height="640"/>
+    <p><code>@1736000000</code></p>
 </div>
 
 <div align="center">
